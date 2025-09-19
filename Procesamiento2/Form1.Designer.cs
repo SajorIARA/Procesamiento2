@@ -39,10 +39,14 @@
             rojoToolStripMenuItem = new ToolStripMenuItem();
             verdeToolStripMenuItem = new ToolStripMenuItem();
             azulToolStripMenuItem = new ToolStripMenuItem();
+            rojosincanalesToolStripMenuItem = new ToolStripMenuItem();
+            escalaDeGrisesToolStripMenuItem = new ToolStripMenuItem();
+            imgenBlancoYNegroToolStripMenuItem = new ToolStripMenuItem();
+            sepiaToolStripMenuItem = new ToolStripMenuItem();
             ofdAbrir = new OpenFileDialog();
             SFile = new SaveFileDialog();
             sfdGuardar = new SaveFileDialog();
-            rojosincanalesToolStripMenuItem = new ToolStripMenuItem();
+            negativoToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pctLienzo).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -50,19 +54,22 @@
             // pctLienzo
             // 
             pctLienzo.BackColor = SystemColors.ActiveCaptionText;
-            pctLienzo.Location = new Point(21, 51);
+            pctLienzo.Location = new Point(24, 68);
+            pctLienzo.Margin = new Padding(3, 4, 3, 4);
             pctLienzo.Name = "pctLienzo";
-            pctLienzo.Size = new Size(400, 200);
+            pctLienzo.Size = new Size(685, 341);
             pctLienzo.SizeMode = PictureBoxSizeMode.StretchImage;
             pctLienzo.TabIndex = 0;
             pctLienzo.TabStop = false;
             // 
             // menuStrip1
             // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
             menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, imagenOriginalToolStripMenuItem, filtrosToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.Padding = new Padding(7, 3, 0, 3);
+            menuStrip1.Size = new Size(914, 30);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -70,63 +77,91 @@
             // 
             archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { abrir, guardarToolStripMenuItem, salirToolStripMenuItem });
             archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
-            archivoToolStripMenuItem.Size = new Size(60, 20);
+            archivoToolStripMenuItem.Size = new Size(73, 24);
             archivoToolStripMenuItem.Text = "Archivo";
             // 
             // abrir
             // 
             abrir.Name = "abrir";
-            abrir.Size = new Size(116, 22);
+            abrir.Size = new Size(145, 26);
             abrir.Text = "Abrir";
             abrir.Click += abrir_Click;
             // 
             // guardarToolStripMenuItem
             // 
             guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
-            guardarToolStripMenuItem.Size = new Size(116, 22);
+            guardarToolStripMenuItem.Size = new Size(145, 26);
             guardarToolStripMenuItem.Text = "Guardar";
             guardarToolStripMenuItem.Click += guardarToolStripMenuItem_Click;
             // 
             // salirToolStripMenuItem
             // 
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            salirToolStripMenuItem.Size = new Size(116, 22);
+            salirToolStripMenuItem.Size = new Size(145, 26);
             salirToolStripMenuItem.Text = "Salir";
             // 
             // imagenOriginalToolStripMenuItem
             // 
             imagenOriginalToolStripMenuItem.Name = "imagenOriginalToolStripMenuItem";
-            imagenOriginalToolStripMenuItem.Size = new Size(104, 20);
+            imagenOriginalToolStripMenuItem.Size = new Size(130, 24);
             imagenOriginalToolStripMenuItem.Text = "Imagen Original";
             imagenOriginalToolStripMenuItem.Click += imagenOriginalToolStripMenuItem_Click;
             // 
             // filtrosToolStripMenuItem
             // 
-            filtrosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem, verdeToolStripMenuItem, azulToolStripMenuItem, rojosincanalesToolStripMenuItem });
+            filtrosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem, verdeToolStripMenuItem, azulToolStripMenuItem, rojosincanalesToolStripMenuItem, escalaDeGrisesToolStripMenuItem, imgenBlancoYNegroToolStripMenuItem, sepiaToolStripMenuItem, negativoToolStripMenuItem });
             filtrosToolStripMenuItem.Name = "filtrosToolStripMenuItem";
-            filtrosToolStripMenuItem.Size = new Size(51, 20);
+            filtrosToolStripMenuItem.Size = new Size(63, 24);
             filtrosToolStripMenuItem.Text = "Filtros";
             // 
             // rojoToolStripMenuItem
             // 
             rojoToolStripMenuItem.Name = "rojoToolStripMenuItem";
-            rojoToolStripMenuItem.Size = new Size(180, 22);
+            rojoToolStripMenuItem.Size = new Size(224, 26);
             rojoToolStripMenuItem.Text = "Rojo";
             rojoToolStripMenuItem.Click += rojoToolStripMenuItem_Click;
             // 
             // verdeToolStripMenuItem
             // 
             verdeToolStripMenuItem.Name = "verdeToolStripMenuItem";
-            verdeToolStripMenuItem.Size = new Size(180, 22);
+            verdeToolStripMenuItem.Size = new Size(224, 26);
             verdeToolStripMenuItem.Text = "Verde";
             verdeToolStripMenuItem.Click += verdeToolStripMenuItem_Click;
             // 
             // azulToolStripMenuItem
             // 
             azulToolStripMenuItem.Name = "azulToolStripMenuItem";
-            azulToolStripMenuItem.Size = new Size(180, 22);
+            azulToolStripMenuItem.Size = new Size(224, 26);
             azulToolStripMenuItem.Text = "Azul";
             azulToolStripMenuItem.Click += azulToolStripMenuItem_Click;
+            // 
+            // rojosincanalesToolStripMenuItem
+            // 
+            rojosincanalesToolStripMenuItem.Name = "rojosincanalesToolStripMenuItem";
+            rojosincanalesToolStripMenuItem.Size = new Size(224, 26);
+            rojosincanalesToolStripMenuItem.Text = "Rojo_sin_canales";
+            rojosincanalesToolStripMenuItem.Click += rojosincanalesToolStripMenuItem_Click;
+            // 
+            // escalaDeGrisesToolStripMenuItem
+            // 
+            escalaDeGrisesToolStripMenuItem.Name = "escalaDeGrisesToolStripMenuItem";
+            escalaDeGrisesToolStripMenuItem.Size = new Size(224, 26);
+            escalaDeGrisesToolStripMenuItem.Text = "Escala de grises";
+            escalaDeGrisesToolStripMenuItem.Click += escalaDeGrisesToolStripMenuItem_Click;
+            // 
+            // imgenBlancoYNegroToolStripMenuItem
+            // 
+            imgenBlancoYNegroToolStripMenuItem.Name = "imgenBlancoYNegroToolStripMenuItem";
+            imgenBlancoYNegroToolStripMenuItem.Size = new Size(224, 26);
+            imgenBlancoYNegroToolStripMenuItem.Text = "Blanco y Negro";
+            imgenBlancoYNegroToolStripMenuItem.Click += BlancoYNegroToolStripMenuItem_Click;
+            // 
+            // sepiaToolStripMenuItem
+            // 
+            sepiaToolStripMenuItem.Name = "sepiaToolStripMenuItem";
+            sepiaToolStripMenuItem.Size = new Size(224, 26);
+            sepiaToolStripMenuItem.Text = "Sepia";
+            sepiaToolStripMenuItem.Click += sepiaToolStripMenuItem_Click;
             // 
             // ofdAbrir
             // 
@@ -137,21 +172,22 @@
             // 
             SFile.FileName = "SFile";
             // 
-            // rojosincanalesToolStripMenuItem
+            // negativoToolStripMenuItem
             // 
-            rojosincanalesToolStripMenuItem.Name = "rojosincanalesToolStripMenuItem";
-            rojosincanalesToolStripMenuItem.Size = new Size(180, 22);
-            rojosincanalesToolStripMenuItem.Text = "Rojo_sin_canales";
-            rojosincanalesToolStripMenuItem.Click += rojosincanalesToolStripMenuItem_Click;
+            negativoToolStripMenuItem.Name = "negativoToolStripMenuItem";
+            negativoToolStripMenuItem.Size = new Size(224, 26);
+            negativoToolStripMenuItem.Text = "Negativo";
+            negativoToolStripMenuItem.Click += negativoToolStripMenuItem_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(914, 600);
             Controls.Add(pctLienzo);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
@@ -179,5 +215,9 @@
         private ToolStripMenuItem verdeToolStripMenuItem;
         private ToolStripMenuItem azulToolStripMenuItem;
         private ToolStripMenuItem rojosincanalesToolStripMenuItem;
+        private ToolStripMenuItem escalaDeGrisesToolStripMenuItem;
+        private ToolStripMenuItem imgenBlancoYNegroToolStripMenuItem;
+        private ToolStripMenuItem sepiaToolStripMenuItem;
+        private ToolStripMenuItem negativoToolStripMenuItem;
     }
 }

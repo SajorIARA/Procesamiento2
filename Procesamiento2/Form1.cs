@@ -169,5 +169,123 @@ namespace Procesamiento2
             pctLienzo.Refresh();
         }
 
+        private void escalaDeGrisesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i, j;
+            Color miColor;
+            Color nuevoColor;
+            int gris;
+
+            // Asegurarse que ImagenResultado sea una copia para no modificar la original directamente
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+
+            for (i = 0; i < AnchoImagen; i++)
+            {
+                for (j = 0; j < AltoImagen; j++)
+                {
+                    miColor = ImagenOriginal.GetPixel(i, j);
+
+                    // Cálculo luminancia para escala de grises
+                    gris = (int)(miColor.R * 0.3 + miColor.G * 0.59 + miColor.B * 0.11);
+
+                    nuevoColor = Color.FromArgb(255, gris, gris, gris);
+
+                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                }
+            }
+
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void BlancoYNegroToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i, j;
+            Color miColor;
+            Color nuevoColor;
+            int gris;
+            int umbral = 128;
+
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+
+            for (i = 0; i < AnchoImagen; i++)
+            {
+                for (j = 0; j < AltoImagen; j++)
+                {
+                    miColor = ImagenOriginal.GetPixel(i, j);
+
+                    // Calcular luminancia (escala de grises)
+                    gris = (int)(miColor.R * 0.3 + miColor.G * 0.59 + miColor.B * 0.11);
+
+                    // Aplicar umbral para blanco o negro
+                    if (gris >= umbral)
+                    {
+                        // Blanco
+                        nuevoColor = Color.FromArgb(255, 255, 255, 255);
+                    }
+                    else
+                    {
+                        // Negro
+                        nuevoColor = Color.FromArgb(255, 0, 0, 0);
+                    }
+
+                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                }
+            }
+
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void sepiaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i, j;
+            Color miColor;
+            Color nuevoColor;
+            int tr, tg, tb;
+
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+
+            for (i = 0; i < AnchoImagen; i++)
+            {
+                for (j = 0; j < AltoImagen; j++)
+                {
+                    miColor = ImagenOriginal.GetPixel(i, j);
+
+                    // Aplicar las fórmulas del sepia
+                    tr = (int)(0.393 * miColor.R + 0.769 * miColor.G + 0.189 * miColor.B);
+                    tg = (int)(0.349 * miColor.R + 0.686 * miColor.G + 0.168 * miColor.B);
+                    tb = (int)(0.272 * miColor.R + 0.534 * miColor.G + 0.131 * miColor.B);
+
+                    // Limitar valores a 255
+                    if (tr > 255) tr = 255;
+                    if (tg > 255) tg = 255;
+                    if (tb > 255) tb = 255;
+
+                    nuevoColor = Color.FromArgb(255, tr, tg, tb);
+
+                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                }
+            }
+
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void negativoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i, j;
+            Color color;
+            Color color1;
+            Color color2;
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);  
+            for(i = 0; i < AnchoImagen; i++)
+            {
+                for (j=0; i <AltoImagen; i++)
+                {
+                    color = 
+                }
+            }
+        }
     }
 }
