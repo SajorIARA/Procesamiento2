@@ -1,3 +1,6 @@
+using System.Drawing;
+using System.Text.Json.Serialization;
+
 namespace Procesamiento2
 {
     public partial class Form1 : Form
@@ -276,16 +279,158 @@ namespace Procesamiento2
         {
             int i, j;
             Color color;
-            Color color1;
-            Color color2;
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);  
-            for(i = 0; i < AnchoImagen; i++)
+            Color colorNegativo;
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+
+            for (i = 0; i < AnchoImagen; i++)
             {
-                for (j=0; i <AltoImagen; i++)
+                for (j = 0; j < AltoImagen; j++)
                 {
-                    color = 
+                    color = ImagenOriginal.GetPixel(i, j);
+
+                    // Calcular negativo
+                    int tr = 255 - color.R;
+                    int tg = 255 - color.G;
+                    int tb = 255 - color.B;
+
+                    colorNegativo = Color.FromArgb(255, tr, tg, tb);
+
+                    ImagenResultado.SetPixel(i, j, colorNegativo);
                 }
             }
+
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void cianToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i, j;
+            Color miColor;
+            Color nuevoColor;
+            int cian;
+
+            // Crear una nueva imagen para no modificar la original
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+
+            for (i = 0; i < AnchoImagen; i++)
+            {
+                for (j = 0; j < AltoImagen; j++)
+                {
+                    miColor = ImagenOriginal.GetPixel(i, j);
+
+                    // Promedio de los canales para intensidad
+                    cian = (miColor.R + miColor.G + miColor.B) / 3;
+
+                    // Crear color cian: rojo = 0, verde = promedio, azul = promedio
+                    nuevoColor = Color.FromArgb(255, 0, cian, cian);
+
+                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                }
+            }
+
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void magentaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i, j;
+            Color miColor;
+            Color nuevoColor;
+            int magenta;
+
+            // Crear una nueva imagen para no modificar la original
+            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+
+            for (i = 0; i < AnchoImagen; i++)
+            {
+                for (j = 0; j < AltoImagen; j++)
+                {
+                    miColor = ImagenOriginal.GetPixel(i, j);
+
+                    // Promedio de los canales para intensidad
+                    magenta = (miColor.R + miColor.G + miColor.B) / 3;
+
+                    // Crear color cian: rojo = 0, verde = promedio, azul = promedio
+                    nuevoColor = Color.FromArgb(255, magenta, 0, magenta);
+
+                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                }
+            }
+
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void ejercicio3ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AltoImagen = ImagenOriginal.Height;
+            AnchoImagen = ImagenOriginal.Width;
+            Color miColor;
+            Color nuevocolor;
+            int rojo;
+
+            for (int y = 0; y < AltoImagen; y++)
+            {
+                for (int x = 0; x < AnchoImagen; x++)
+                {
+                    miColor = ImagenOriginal.GetPixel(x, y);
+                    if (y < AltoImagen / 3)
+                    {
+                        rojo = (miColor.R + miColor.G + miColor.B) / 3;
+                        nuevocolor = (Color.FromArgb(255, rojo, 0, 0));
+                        ImagenResultado.SetPixel(x, y, nuevocolor);
+                    }
+                    else if (y < 2 * AltoImagen / 3)
+                    {
+                        rojo = (miColor.R + miColor.G + miColor.B) / 3;
+                        nuevocolor = (Color.FromArgb(255, rojo, rojo, 0));
+                        ImagenResultado.SetPixel(x, y, nuevocolor);
+                    }
+                    else
+                    {
+                        rojo = (miColor.R + miColor.G + miColor.B) / 3;
+                        nuevocolor = (Color.FromArgb(255, 0, rojo, 0));
+                        ImagenResultado.SetPixel(x, y, nuevocolor);
+                    }
+                }
+            }
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+        private void ejercicio3ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AltoImagen = ImagenOriginal.Height;
+            AnchoImagen = ImagenOriginal.Width;
+            Color miColor;
+            Color nuevocolor;
+            int rojo;
+            for (int y = 0; y < AltoImagen; y++)
+            {
+                for (int x = 0; x < AnchoImagen; x++)
+                {
+                    Color pixel = ImagenOriginal.GetPixel(x, y);
+                    int gris = (pixel.R + pixel.G + pixel.B) / 3;
+
+                    // Diagonal de arriba derecha a abajo izquierda:
+                    // Ecuación: y < - (alto / ancho) * x + alto
+                    if (y < (-1.0 * AltoImagen / AnchoImagen) * x + AltoImagen)
+                    {
+                        // Parte superior derecha ? escala de grises
+                        ImagenOriginal.SetPixel(x, y, Color.FromArgb(gris, gris, gris));
+                    }
+                    else
+                    {
+                        // Parte inferior izquierda ? blanco y negro
+                        if (gris > 128) ImagenOriginal.SetPixel(x, y, Color.White);
+                        else ImagenOriginal.SetPixel(x, y, Color.Black);
+                    }
+                }
+
+            }
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
         }
     }
 }
