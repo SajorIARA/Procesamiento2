@@ -2,94 +2,100 @@
 {
     partial class Form1
     {
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.PictureBox pctLienzo;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem archivoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem abrirToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem guardarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filtrosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rojoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem verdeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem azulToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rojosincanalesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cianToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem magentaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem escalaDeGrisesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem BlancoYNegroToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sepiaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem negativoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem imagenOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mosaicoToolStripMenuItem;
+        private System.Windows.Forms.TrackBar trackBar1; // brillo
+        private System.Windows.Forms.TrackBar trackBar2; // ruido
+        private System.Windows.Forms.TextBox textBox1;   // tamaño mosaico
+        private System.Windows.Forms.SaveFileDialog sfdGuardar;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             pctLienzo = new PictureBox();
             menuStrip1 = new MenuStrip();
             archivoToolStripMenuItem = new ToolStripMenuItem();
-            abrir = new ToolStripMenuItem();
+            abrirToolStripMenuItem = new ToolStripMenuItem();
             guardarToolStripMenuItem = new ToolStripMenuItem();
             salirToolStripMenuItem = new ToolStripMenuItem();
-            imagenOriginalToolStripMenuItem = new ToolStripMenuItem();
             filtrosToolStripMenuItem = new ToolStripMenuItem();
             rojoToolStripMenuItem = new ToolStripMenuItem();
             verdeToolStripMenuItem = new ToolStripMenuItem();
             azulToolStripMenuItem = new ToolStripMenuItem();
             rojosincanalesToolStripMenuItem = new ToolStripMenuItem();
-            escalaDeGrisesToolStripMenuItem = new ToolStripMenuItem();
-            imgenBlancoYNegroToolStripMenuItem = new ToolStripMenuItem();
-            sepiaToolStripMenuItem = new ToolStripMenuItem();
-            negativoToolStripMenuItem = new ToolStripMenuItem();
             cianToolStripMenuItem = new ToolStripMenuItem();
             magentaToolStripMenuItem = new ToolStripMenuItem();
-            ejercicio3ToolStripMenuItem = new ToolStripMenuItem();
-            ofdAbrir = new OpenFileDialog();
-            SFile = new SaveFileDialog();
+            escalaDeGrisesToolStripMenuItem = new ToolStripMenuItem();
+            BlancoYNegroToolStripMenuItem = new ToolStripMenuItem();
+            sepiaToolStripMenuItem = new ToolStripMenuItem();
+            negativoToolStripMenuItem = new ToolStripMenuItem();
+            imagenOriginalToolStripMenuItem = new ToolStripMenuItem();
+            mosaicoToolStripMenuItem = new ToolStripMenuItem();
+            trackBar1 = new TrackBar();
+            trackBar2 = new TrackBar();
+            textBox1 = new TextBox();
             sfdGuardar = new SaveFileDialog();
-            ejercicio3ToolStripMenuItem1 = new ToolStripMenuItem();
+            frangasToolStripMenuItem = new ToolStripMenuItem();
+            diagonalToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pctLienzo).BeginInit();
             menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
             SuspendLayout();
             // 
             // pctLienzo
             // 
             pctLienzo.BackColor = SystemColors.ActiveCaptionText;
-            pctLienzo.Location = new Point(24, 68);
-            pctLienzo.Margin = new Padding(3, 4, 3, 4);
+            pctLienzo.Location = new Point(12, 40);
             pctLienzo.Name = "pctLienzo";
-            pctLienzo.Size = new Size(685, 341);
-            pctLienzo.SizeMode = PictureBoxSizeMode.StretchImage;
+            pctLienzo.Size = new Size(800, 500);
             pctLienzo.TabIndex = 0;
             pctLienzo.TabStop = false;
+            pctLienzo.Paint += pctLienzo_Paint;
+            pctLienzo.MouseDown += pctLienzo_MouseDown;
+            pctLienzo.MouseMove += pctLienzo_MouseMove;
+            pctLienzo.MouseUp += pctLienzo_MouseUp;
             // 
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, imagenOriginalToolStripMenuItem, filtrosToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, filtrosToolStripMenuItem, imagenOriginalToolStripMenuItem, mosaicoToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Padding = new Padding(7, 3, 0, 3);
-            menuStrip1.Size = new Size(914, 30);
+            menuStrip1.Size = new Size(1024, 28);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
             // archivoToolStripMenuItem
             // 
-            archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { abrir, guardarToolStripMenuItem, salirToolStripMenuItem });
+            archivoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { abrirToolStripMenuItem, guardarToolStripMenuItem, salirToolStripMenuItem });
             archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
             archivoToolStripMenuItem.Size = new Size(73, 24);
             archivoToolStripMenuItem.Text = "Archivo";
             // 
-            // abrir
+            // abrirToolStripMenuItem
             // 
-            abrir.Name = "abrir";
-            abrir.Size = new Size(145, 26);
-            abrir.Text = "Abrir";
-            abrir.Click += abrir_Click;
+            abrirToolStripMenuItem.Name = "abrirToolStripMenuItem";
+            abrirToolStripMenuItem.Size = new Size(145, 26);
+            abrirToolStripMenuItem.Text = "Abrir";
+            abrirToolStripMenuItem.Click += abrir_Click;
             // 
             // guardarToolStripMenuItem
             // 
@@ -103,20 +109,15 @@
             salirToolStripMenuItem.Name = "salirToolStripMenuItem";
             salirToolStripMenuItem.Size = new Size(145, 26);
             salirToolStripMenuItem.Text = "Salir";
-            // 
-            // imagenOriginalToolStripMenuItem
-            // 
-            imagenOriginalToolStripMenuItem.Name = "imagenOriginalToolStripMenuItem";
-            imagenOriginalToolStripMenuItem.Size = new Size(130, 24);
-            imagenOriginalToolStripMenuItem.Text = "Imagen Original";
-            imagenOriginalToolStripMenuItem.Click += imagenOriginalToolStripMenuItem_Click;
+            salirToolStripMenuItem.Click += salirToolStripMenuItem_Click;
             // 
             // filtrosToolStripMenuItem
             // 
-            filtrosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem, verdeToolStripMenuItem, azulToolStripMenuItem, rojosincanalesToolStripMenuItem, escalaDeGrisesToolStripMenuItem, imgenBlancoYNegroToolStripMenuItem, sepiaToolStripMenuItem, negativoToolStripMenuItem, cianToolStripMenuItem, magentaToolStripMenuItem, ejercicio3ToolStripMenuItem, ejercicio3ToolStripMenuItem1 });
+            filtrosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem, verdeToolStripMenuItem, azulToolStripMenuItem, rojosincanalesToolStripMenuItem, cianToolStripMenuItem, magentaToolStripMenuItem, escalaDeGrisesToolStripMenuItem, BlancoYNegroToolStripMenuItem, sepiaToolStripMenuItem, negativoToolStripMenuItem, frangasToolStripMenuItem, diagonalToolStripMenuItem });
             filtrosToolStripMenuItem.Name = "filtrosToolStripMenuItem";
             filtrosToolStripMenuItem.Size = new Size(63, 24);
             filtrosToolStripMenuItem.Text = "Filtros";
+            filtrosToolStripMenuItem.Click += ejercicio2FranjasToolStripMenuItem_Click;
             // 
             // rojoToolStripMenuItem
             // 
@@ -143,8 +144,22 @@
             // 
             rojosincanalesToolStripMenuItem.Name = "rojosincanalesToolStripMenuItem";
             rojosincanalesToolStripMenuItem.Size = new Size(224, 26);
-            rojosincanalesToolStripMenuItem.Text = "Rojo_sin_canales";
+            rojosincanalesToolStripMenuItem.Text = "Rojo Sin Canales";
             rojosincanalesToolStripMenuItem.Click += rojosincanalesToolStripMenuItem_Click;
+            // 
+            // cianToolStripMenuItem
+            // 
+            cianToolStripMenuItem.Name = "cianToolStripMenuItem";
+            cianToolStripMenuItem.Size = new Size(224, 26);
+            cianToolStripMenuItem.Text = "Cian";
+            cianToolStripMenuItem.Click += cianToolStripMenuItem_Click;
+            // 
+            // magentaToolStripMenuItem
+            // 
+            magentaToolStripMenuItem.Name = "magentaToolStripMenuItem";
+            magentaToolStripMenuItem.Size = new Size(224, 26);
+            magentaToolStripMenuItem.Text = "Magenta";
+            magentaToolStripMenuItem.Click += magentaToolStripMenuItem_Click;
             // 
             // escalaDeGrisesToolStripMenuItem
             // 
@@ -153,12 +168,12 @@
             escalaDeGrisesToolStripMenuItem.Text = "Escala de grises";
             escalaDeGrisesToolStripMenuItem.Click += escalaDeGrisesToolStripMenuItem_Click;
             // 
-            // imgenBlancoYNegroToolStripMenuItem
+            // BlancoYNegroToolStripMenuItem
             // 
-            imgenBlancoYNegroToolStripMenuItem.Name = "imgenBlancoYNegroToolStripMenuItem";
-            imgenBlancoYNegroToolStripMenuItem.Size = new Size(224, 26);
-            imgenBlancoYNegroToolStripMenuItem.Text = "Blanco y Negro";
-            imgenBlancoYNegroToolStripMenuItem.Click += BlancoYNegroToolStripMenuItem_Click;
+            BlancoYNegroToolStripMenuItem.Name = "BlancoYNegroToolStripMenuItem";
+            BlancoYNegroToolStripMenuItem.Size = new Size(224, 26);
+            BlancoYNegroToolStripMenuItem.Text = "Blanco y Negro";
+            BlancoYNegroToolStripMenuItem.Click += BlancoYNegroToolStripMenuItem_Click;
             // 
             // sepiaToolStripMenuItem
             // 
@@ -174,86 +189,81 @@
             negativoToolStripMenuItem.Text = "Negativo";
             negativoToolStripMenuItem.Click += negativoToolStripMenuItem_Click;
             // 
-            // cianToolStripMenuItem
+            // imagenOriginalToolStripMenuItem
             // 
-            cianToolStripMenuItem.Name = "cianToolStripMenuItem";
-            cianToolStripMenuItem.Size = new Size(224, 26);
-            cianToolStripMenuItem.Text = "Cian ";
-            cianToolStripMenuItem.Click += cianToolStripMenuItem_Click;
+            imagenOriginalToolStripMenuItem.Name = "imagenOriginalToolStripMenuItem";
+            imagenOriginalToolStripMenuItem.Size = new Size(126, 24);
+            imagenOriginalToolStripMenuItem.Text = "ImagenOriginal";
+            imagenOriginalToolStripMenuItem.Click += imagenOriginalToolStripMenuItem_Click;
             // 
-            // magentaToolStripMenuItem
+            // mosaicoToolStripMenuItem
             // 
-            magentaToolStripMenuItem.Name = "magentaToolStripMenuItem";
-            magentaToolStripMenuItem.Size = new Size(224, 26);
-            magentaToolStripMenuItem.Text = "Magenta";
-            magentaToolStripMenuItem.Click += magentaToolStripMenuItem_Click;
+            mosaicoToolStripMenuItem.Name = "mosaicoToolStripMenuItem";
+            mosaicoToolStripMenuItem.Size = new Size(79, 24);
+            mosaicoToolStripMenuItem.Text = "Mosaico";
+            mosaicoToolStripMenuItem.Click += mosaicoToolStripMenuItem_Click;
             // 
-            // ejercicio3ToolStripMenuItem
+            // trackBar1
             // 
-            ejercicio3ToolStripMenuItem.Name = "ejercicio3ToolStripMenuItem";
-            ejercicio3ToolStripMenuItem.Size = new Size(224, 26);
-            ejercicio3ToolStripMenuItem.Text = "ejercicio 2";
-            ejercicio3ToolStripMenuItem.Click += ejercicio3ToolStripMenuItem_Click;
+            trackBar1.Location = new Point(830, 40);
+            trackBar1.Maximum = 255;
+            trackBar1.Minimum = -255;
+            trackBar1.Name = "trackBar1";
+            trackBar1.Size = new Size(182, 56);
+            trackBar1.TabIndex = 2;
+            trackBar1.Scroll += trackBar1_Scroll;
             // 
-            // ofdAbrir
+            // trackBar2
             // 
-            ofdAbrir.FileName = "ofdAbrir";
-            ofdAbrir.FileOk += ofdAbrir_FileOk;
+            trackBar2.Location = new Point(830, 98);
+            trackBar2.Maximum = 100;
+            trackBar2.Name = "trackBar2";
+            trackBar2.Size = new Size(182, 56);
+            trackBar2.TabIndex = 1;
+            trackBar2.Scroll += trackBar2_Scroll;
             // 
-            // SFile
+            // textBox1
             // 
-            SFile.FileName = "SFile";
+            textBox1.Location = new Point(830, 160);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(50, 27);
+            textBox1.TabIndex = 0;
+            textBox1.Text = "10";
             // 
-            // ejercicio3ToolStripMenuItem1
+            // frangasToolStripMenuItem
             // 
-            ejercicio3ToolStripMenuItem1.Name = "ejercicio3ToolStripMenuItem1";
-            ejercicio3ToolStripMenuItem1.Size = new Size(224, 26);
-            ejercicio3ToolStripMenuItem1.Text = "ejercicio 3";
-            ejercicio3ToolStripMenuItem1.Click += ejercicio3ToolStripMenuItem1_Click;
+            frangasToolStripMenuItem.Name = "frangasToolStripMenuItem";
+            frangasToolStripMenuItem.Size = new Size(224, 26);
+            frangasToolStripMenuItem.Text = "Frangas";
+            // 
+            // diagonalToolStripMenuItem
+            // 
+            diagonalToolStripMenuItem.Name = "diagonalToolStripMenuItem";
+            diagonalToolStripMenuItem.Size = new Size(224, 26);
+            diagonalToolStripMenuItem.Text = "Diagonal";
+            diagonalToolStripMenuItem.Click += ejercicio3DiagonalToolStripMenuItem_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 600);
+            ClientSize = new Size(1024, 600);
+            Controls.Add(textBox1);
+            Controls.Add(trackBar2);
+            Controls.Add(trackBar1);
             Controls.Add(pctLienzo);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
-            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Procesamiento de Imagen";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)pctLienzo).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
-
-        #endregion
-
-        private PictureBox pctLienzo;
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem archivoToolStripMenuItem;
-        private ToolStripMenuItem abrir;
-        private ToolStripMenuItem guardarToolStripMenuItem;
-        private ToolStripMenuItem salirToolStripMenuItem;
-        private ToolStripMenuItem imagenOriginalToolStripMenuItem;
-        private ToolStripMenuItem filtrosToolStripMenuItem;
-        private OpenFileDialog ofdAbrir;
-        private SaveFileDialog SFile;
-        private SaveFileDialog sfdGuardar;
-        private ToolStripMenuItem rojoToolStripMenuItem;
-        private ToolStripMenuItem verdeToolStripMenuItem;
-        private ToolStripMenuItem azulToolStripMenuItem;
-        private ToolStripMenuItem rojosincanalesToolStripMenuItem;
-        private ToolStripMenuItem escalaDeGrisesToolStripMenuItem;
-        private ToolStripMenuItem imgenBlancoYNegroToolStripMenuItem;
-        private ToolStripMenuItem sepiaToolStripMenuItem;
-        private ToolStripMenuItem negativoToolStripMenuItem;
-        private ToolStripMenuItem cianToolStripMenuItem;
-        private ToolStripMenuItem magentaToolStripMenuItem;
-        private ToolStripMenuItem ejercicio3ToolStripMenuItem;
-        private ToolStripMenuItem ejercicio3ToolStripMenuItem1;
+        private ToolStripMenuItem frangasToolStripMenuItem;
+        private ToolStripMenuItem diagonalToolStripMenuItem;
     }
 }

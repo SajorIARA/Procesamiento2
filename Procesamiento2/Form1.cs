@@ -1,436 +1,276 @@
+using System;
 using System.Drawing;
-using System.Text.Json.Serialization;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace Procesamiento2
 {
     public partial class Form1 : Form
     {
+        private Bitmap ImagenOriginal, ImagenResultado;
+        private bool seleccionando = false;
+        private Point puntoInicialPB, puntoInicialImg;
+        private Rectangle rectSeleccion;
+
+
         public Form1()
         {
             InitializeComponent();
         }
-        // Variables
-        int AnchoP = 200, AltoP = 200;
-        int AnchoImagen, AltoImagen;
-        Bitmap ImagenOriginal, ImagenResultado;
-        Graphics Lienzo;
-        int a = 20;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            textBox1.Text = "10";
+            trackBar1.Value = 0;
+            trackBar2.Value = 0;
+            pctLienzo.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
-        private void abrir_Click(object sender, EventArgs e)
+        private void MostrarResultado()
         {
-            // Abrir
-            if (ofdAbrir.ShowDialog() == DialogResult.OK)
+            pctLienzo.Image = ImagenResultado;
+            pctLienzo.Refresh();
+        }
+
+        private void AplicarFiltro(Func<Color, Color> transformacion)
+        {
+            if (ImagenOriginal == null) return;
+
+            int ancho = ImagenOriginal.Width;
+            int alto = ImagenOriginal.Height;
+            ImagenResultado = new Bitmap(ancho, alto);
+
+            for (int x = 0; x < ancho; x++)
+                for (int y = 0; y < alto; y++)
+                    ImagenResultado.SetPixel(x, y, transformacion(ImagenOriginal.GetPixel(x, y)));
+
+            MostrarResultado();
+        }
+
+        private void AplicarMosaico(Rectangle area)
+        {
+            if (ImagenOriginal == null || area.Width == 0 || area.Height == 0) return;
+
+            if (!int.TryParse(textBox1.Text, out int tamBloque) || tamBloque <= 0) tamBloque = 10;
+
+            Bitmap bmp = new Bitmap(ImagenOriginal);
+
+            for (int y = area.Top; y < area.Bottom; y += tamBloque)
             {
-                ImagenOriginal = (Bitmap)(Bitmap.FromFile(ofdAbrir.FileName));
-                AnchoImagen = ImagenOriginal.Width;
-                AltoImagen = ImagenOriginal.Height;
-                pctLienzo.Image = ImagenOriginal;
-                ImagenResultado = ImagenOriginal;
+                for (int x = area.Left; x < area.Right; x += tamBloque)
+                {
+                    int bloqueW = Math.Min(tamBloque, area.Right - x);
+                    int bloqueH = Math.Min(tamBloque, area.Bottom - y);
+
+                    int r = 0, g = 0, b = 0, count = 0;
+                    for (int yy = 0; yy < bloqueH; yy++)
+                        for (int xx = 0; xx < bloqueW; xx++)
+                        {
+                            Color pixel = bmp.GetPixel(x + xx, y + yy);
+                            r += pixel.R; g += pixel.G; b += pixel.B; count++;
+                        }
+
+                    Color promedio = Color.FromArgb(r / count, g / count, b / count);
+
+                    for (int yy = 0; yy < bloqueH; yy++)
+                        for (int xx = 0; xx < bloqueW; xx++)
+                            bmp.SetPixel(x + xx, y + yy, promedio);
+                }
+            }
+
+            ImagenResultado = bmp;
+            MostrarResultado();
+        }
+
+        private Point PictureBoxToImageCoords(Point pbPoint)
+        {
+            if (ImagenOriginal == null) return Point.Empty;
+            int imgW = ImagenOriginal.Width, imgH = ImagenOriginal.Height;
+            int pbW = pctLienzo.Width, pbH = pctLienzo.Height;
+
+            if (pctLienzo.SizeMode == PictureBoxSizeMode.Zoom)
+            {
+                float ratio = Math.Min((float)pbW / imgW, (float)pbH / imgH);
+                float dispW = imgW * ratio, dispH = imgH * ratio;
+                float offsetX = (pbW - dispW) / 2f, offsetY = (pbH - dispH) / 2f;
+                float xImg = (pbPoint.X - offsetX) / ratio;
+                float yImg = (pbPoint.Y - offsetY) / ratio;
+                return new Point((int)Math.Clamp(Math.Round(xImg), 0, imgW - 1),
+                                 (int)Math.Clamp(Math.Round(yImg), 0, imgH - 1));
+            }
+            else
+            {
+                return new Point((int)Math.Clamp(pbPoint.X * (float)imgW / pbW, 0, imgW - 1),
+                                 (int)Math.Clamp(pbPoint.Y * (float)imgH / pbH, 0, imgH - 1));
             }
         }
 
-        private void ofdAbrir_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
+        // =====================
+        // Eventos UI
+        // =====================
 
+        private void abrir_Click(object sender, EventArgs e)
+        {
+            using OpenFileDialog ofd = new OpenFileDialog { Filter = "Archivos de imagen|*.jpg;*.png;*.bmp" };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                ImagenOriginal = new Bitmap(ofd.FileName);
+                ImagenResultado = new Bitmap(ImagenOriginal);
+                MostrarResultado();
+            }
         }
 
         private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (ImagenResultado == null) return;
             if (sfdGuardar.ShowDialog() == DialogResult.OK)
             {
-                // Detectar el formato de la imagen original para guardar con ese formato
-                System.Drawing.Imaging.ImageFormat formato;
-
-                string extension = System.IO.Path.GetExtension(sfdGuardar.FileName).ToLower();
-
-                switch (extension)
+                string ext = System.IO.Path.GetExtension(sfdGuardar.FileName).ToLower();
+                var formato = ext switch
                 {
-                    case ".bmp":
-                        formato = System.Drawing.Imaging.ImageFormat.Bmp;
-                        break;
-                    case ".png":
-                        formato = System.Drawing.Imaging.ImageFormat.Png;
-                        break;
-                    case ".gif":
-                        formato = System.Drawing.Imaging.ImageFormat.Gif;
-                        break;
-                    case ".tiff":
-                    case ".tif":
-                        formato = System.Drawing.Imaging.ImageFormat.Tiff;
-                        break;
-                    case ".jpeg":
-                    case ".jpg":
-                        formato = System.Drawing.Imaging.ImageFormat.Jpeg;
-                        break;
-                    default:
-                        formato = System.Drawing.Imaging.ImageFormat.Png; // por defecto PNG
-                        break;
-                }
-
+                    ".bmp" => ImageFormat.Bmp,
+                    ".png" => ImageFormat.Png,
+                    ".gif" => ImageFormat.Gif,
+                    ".tif" or ".tiff" => ImageFormat.Tiff,
+                    ".jpg" or ".jpeg" => ImageFormat.Jpeg,
+                    _ => ImageFormat.Png
+                };
                 ImagenResultado.Save(sfdGuardar.FileName, formato);
-
             }
         }
 
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e) => Close();
         private void imagenOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ImagenOriginal = (Bitmap)(Bitmap.FromFile(ofdAbrir.FileName));
-            pctLienzo.Image = ImagenOriginal;
-            pctLienzo.Refresh();
+            if (ImagenOriginal == null) return;
+            ImagenResultado = new Bitmap(ImagenOriginal);
+            MostrarResultado();
         }
 
-        private void rojoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            // rojo
-            int i, j, rojo;
-            Color miColor = new Color();
-            Color nuevoColor = new Color();
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-                    rojo = (miColor.R + miColor.B + miColor.G) / 3;
-                    nuevoColor = Color.FromArgb(255, rojo, 0, 0);
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
-                }
-            }
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            if (ImagenOriginal == null) return;
+            int brillo = trackBar1.Value;
+            AplicarFiltro(c => Color.FromArgb(255,
+                Math.Clamp(c.R + brillo, 0, 255),
+                Math.Clamp(c.G + brillo, 0, 255),
+                Math.Clamp(c.B + brillo, 0, 255)));
         }
 
-        private void verdeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void trackBar2_Scroll(object sender, EventArgs e)
         {
-            // Filtro Verde con promedio
-            int i, j, verde;
-            Color miColor = new Color();
-            Color nuevoColor = new Color();
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-                    // Se hace promedio igual que en rojo
-                    verde = (miColor.R + miColor.G + miColor.B) / 3;
-                    nuevoColor = Color.FromArgb(255, 0, verde, 0);
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
-                }
-            }
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            if (ImagenOriginal == null) return;
+            int intensidad = trackBar2.Value;
+            Random rand = new Random();
+            AplicarFiltro(c => Color.FromArgb(255,
+                Math.Clamp(c.R + rand.Next(-intensidad, intensidad + 1), 0, 255),
+                Math.Clamp(c.G + rand.Next(-intensidad, intensidad + 1), 0, 255),
+                Math.Clamp(c.B + rand.Next(-intensidad, intensidad + 1), 0, 255)));
         }
 
-        private void azulToolStripMenuItem_Click(object sender, EventArgs e)
+        private void rojosincanalesToolStripMenuItem_Click(object sender, EventArgs e) =>
+            AplicarFiltro(c => Filtros.RojoSinCanales(c, 50));
+
+        private void cianToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Cian);
+        private void magentaToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Magenta);
+        private void rojoToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Rojo);
+        private void verdeToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Verde);
+        private void azulToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Azul);
+        private void escalaDeGrisesToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.EscalaGrises);
+        private void BlancoYNegroToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.BlancoNegro);
+        private void sepiaToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Sepia);
+        private void negativoToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Negativo);
+        private void ejercicio2FranjasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Filtro Azul con promedio
-            int i, j, azul;
-            Color miColor;
-            Color nuevoColor;
-            for (i = 0; i < AnchoImagen; i++)
+            if (ImagenOriginal == null) return;
+
+            int ancho = ImagenOriginal.Width;
+            int alto = ImagenOriginal.Height;
+            ImagenResultado = new Bitmap(ancho, alto);
+
+            for (int y = 0; y < alto; y++)
             {
-                for (j = 0; j < AltoImagen; j++)
+                for (int x = 0; x < ancho; x++)
                 {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-                    azul = (miColor.R + miColor.G + miColor.B) / 3;
-                    nuevoColor = Color.FromArgb(255, 0, 0, azul);
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
-                }
-            }
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
-            pctLienzo.Refresh();
-
-        }
-
-        private void rojosincanalesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int i, j;
-            Color miColor;
-            Color nuevoColor;
-            int aclarado = 50; // cantidad para aclarar (puedes ajustar)
-
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-                    // Aclarar canal rojo sumando aclarado pero sin pasar de 255
-                    int rojoAclarado = miColor.R + aclarado;
-                    if (rojoAclarado > 255)
-                        rojoAclarado = 255;
-
-                    nuevoColor = Color.FromArgb(255, rojoAclarado, 0, 0);
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
-                }
-            }
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
-        }
-
-        private void escalaDeGrisesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int i, j;
-            Color miColor;
-            Color nuevoColor;
-            int gris;
-
-            // Asegurarse que ImagenResultado sea una copia para no modificar la original directamente
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
-
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-
-                    // Cálculo luminancia para escala de grises
-                    gris = (int)(miColor.R * 0.3 + miColor.G * 0.59 + miColor.B * 0.11);
-
-                    nuevoColor = Color.FromArgb(255, gris, gris, gris);
-
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                    Color c = ImagenOriginal.GetPixel(x, y);
+                    ImagenResultado.SetPixel(x, y, Filtros.Ejercicio2_Franzas(c, y, alto));
                 }
             }
 
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            MostrarResultado();
         }
-
-        private void BlancoYNegroToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ejercicio3DiagonalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int i, j;
-            Color miColor;
-            Color nuevoColor;
-            int gris;
-            int umbral = 128;
+            if (ImagenOriginal == null) return;
 
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+            int ancho = ImagenOriginal.Width;
+            int alto = ImagenOriginal.Height;
+            ImagenResultado = new Bitmap(ancho, alto);
 
-            for (i = 0; i < AnchoImagen; i++)
+            for (int y = 0; y < alto; y++)
             {
-                for (j = 0; j < AltoImagen; j++)
+                for (int x = 0; x < ancho; x++)
                 {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-
-                    // Calcular luminancia (escala de grises)
-                    gris = (int)(miColor.R * 0.3 + miColor.G * 0.59 + miColor.B * 0.11);
-
-                    // Aplicar umbral para blanco o negro
-                    if (gris >= umbral)
-                    {
-                        // Blanco
-                        nuevoColor = Color.FromArgb(255, 255, 255, 255);
-                    }
-                    else
-                    {
-                        // Negro
-                        nuevoColor = Color.FromArgb(255, 0, 0, 0);
-                    }
-
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                    Color c = ImagenOriginal.GetPixel(x, y);
+                    ImagenResultado.SetPixel(x, y, Filtros.Ejercicio3_Diagonal(c, x, y, ancho, alto));
                 }
             }
 
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            MostrarResultado();
         }
 
-        private void sepiaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void mosaicoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int i, j;
-            Color miColor;
-            Color nuevoColor;
-            int tr, tg, tb;
-
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
-
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-
-                    // Aplicar las fórmulas del sepia
-                    tr = (int)(0.393 * miColor.R + 0.769 * miColor.G + 0.189 * miColor.B);
-                    tg = (int)(0.349 * miColor.R + 0.686 * miColor.G + 0.168 * miColor.B);
-                    tb = (int)(0.272 * miColor.R + 0.534 * miColor.G + 0.131 * miColor.B);
-
-                    // Limitar valores a 255
-                    if (tr > 255) tr = 255;
-                    if (tg > 255) tg = 255;
-                    if (tb > 255) tb = 255;
-
-                    nuevoColor = Color.FromArgb(255, tr, tg, tb);
-
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
-                }
-            }
-
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            if (ImagenOriginal == null) return;
+            AplicarMosaico(new Rectangle(0, 0, ImagenOriginal.Width, ImagenOriginal.Height));
+        }
+        private void pctLienzo_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (ImagenOriginal == null) return;
+            seleccionando = true;
+            puntoInicialPB = e.Location;
+            puntoInicialImg = PictureBoxToImageCoords(e.Location);
+            rectSeleccion = new Rectangle(e.Location, Size.Empty);
         }
 
-        private void negativoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pctLienzo_MouseMove(object sender, MouseEventArgs e)
         {
-            int i, j;
-            Color color;
-            Color colorNegativo;
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+            if (!seleccionando) return;
 
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    color = ImagenOriginal.GetPixel(i, j);
+            rectSeleccion = new Rectangle(
+                Math.Min(e.X, puntoInicialPB.X),
+                Math.Min(e.Y, puntoInicialPB.Y),
+                Math.Abs(e.X - puntoInicialPB.X),
+                Math.Abs(e.Y - puntoInicialPB.Y)
+            );
 
-                    // Calcular negativo
-                    int tr = 255 - color.R;
-                    int tg = 255 - color.G;
-                    int tb = 255 - color.B;
-
-                    colorNegativo = Color.FromArgb(255, tr, tg, tb);
-
-                    ImagenResultado.SetPixel(i, j, colorNegativo);
-                }
-            }
-
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            pctLienzo.Invalidate(); // repinta el PictureBox
         }
 
-        private void cianToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pctLienzo_MouseUp(object sender, MouseEventArgs e)
         {
-            int i, j;
-            Color miColor;
-            Color nuevoColor;
-            int cian;
+            if (!seleccionando) return;
+            seleccionando = false;
 
-            // Crear una nueva imagen para no modificar la original
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
+            Point puntoFinalImg = PictureBoxToImageCoords(e.Location);
+            Rectangle imgRect = new Rectangle(
+                Math.Min(puntoInicialImg.X, puntoFinalImg.X),
+                Math.Min(puntoInicialImg.Y, puntoFinalImg.Y),
+                Math.Abs(puntoFinalImg.X - puntoInicialImg.X),
+                Math.Abs(puntoFinalImg.Y - puntoInicialImg.Y)
+            );
 
-            for (i = 0; i < AnchoImagen; i++)
-            {
-                for (j = 0; j < AltoImagen; j++)
-                {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-
-                    // Promedio de los canales para intensidad
-                    cian = (miColor.R + miColor.G + miColor.B) / 3;
-
-                    // Crear color cian: rojo = 0, verde = promedio, azul = promedio
-                    nuevoColor = Color.FromArgb(255, 0, cian, cian);
-
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
-                }
-            }
-
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
+            AplicarMosaico(imgRect);
         }
-
-        private void magentaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pctLienzo_Paint(object sender, PaintEventArgs e)
         {
-            int i, j;
-            Color miColor;
-            Color nuevoColor;
-            int magenta;
-
-            // Crear una nueva imagen para no modificar la original
-            ImagenResultado = new Bitmap(ImagenOriginal.Width, ImagenOriginal.Height);
-
-            for (i = 0; i < AnchoImagen; i++)
+            if (rectSeleccion != Rectangle.Empty)
             {
-                for (j = 0; j < AltoImagen; j++)
+                using (Pen lapiz = new Pen(Color.Red, 2))
                 {
-                    miColor = ImagenOriginal.GetPixel(i, j);
-
-                    // Promedio de los canales para intensidad
-                    magenta = (miColor.R + miColor.G + miColor.B) / 3;
-
-                    // Crear color cian: rojo = 0, verde = promedio, azul = promedio
-                    nuevoColor = Color.FromArgb(255, magenta, 0, magenta);
-
-                    ImagenResultado.SetPixel(i, j, nuevoColor);
+                    e.Graphics.DrawRectangle(lapiz, rectSeleccion);
                 }
             }
-
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
-        }
-
-        private void ejercicio3ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AltoImagen = ImagenOriginal.Height;
-            AnchoImagen = ImagenOriginal.Width;
-            Color miColor;
-            Color nuevocolor;
-            int rojo;
-
-            for (int y = 0; y < AltoImagen; y++)
-            {
-                for (int x = 0; x < AnchoImagen; x++)
-                {
-                    miColor = ImagenOriginal.GetPixel(x, y);
-                    if (y < AltoImagen / 3)
-                    {
-                        rojo = (miColor.R + miColor.G + miColor.B) / 3;
-                        nuevocolor = (Color.FromArgb(255, rojo, 0, 0));
-                        ImagenResultado.SetPixel(x, y, nuevocolor);
-                    }
-                    else if (y < 2 * AltoImagen / 3)
-                    {
-                        rojo = (miColor.R + miColor.G + miColor.B) / 3;
-                        nuevocolor = (Color.FromArgb(255, rojo, rojo, 0));
-                        ImagenResultado.SetPixel(x, y, nuevocolor);
-                    }
-                    else
-                    {
-                        rojo = (miColor.R + miColor.G + miColor.B) / 3;
-                        nuevocolor = (Color.FromArgb(255, 0, rojo, 0));
-                        ImagenResultado.SetPixel(x, y, nuevocolor);
-                    }
-                }
-            }
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
-        }
-        private void ejercicio3ToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            AltoImagen = ImagenOriginal.Height;
-            AnchoImagen = ImagenOriginal.Width;
-            Color miColor;
-            Color nuevocolor;
-            int rojo;
-            for (int y = 0; y < AltoImagen; y++)
-            {
-                for (int x = 0; x < AnchoImagen; x++)
-                {
-                    Color pixel = ImagenOriginal.GetPixel(x, y);
-                    int gris = (pixel.R + pixel.G + pixel.B) / 3;
-
-                    // Diagonal de arriba derecha a abajo izquierda:
-                    // Ecuación: y < - (alto / ancho) * x + alto
-                    if (y < (-1.0 * AltoImagen / AnchoImagen) * x + AltoImagen)
-                    {
-                        // Parte superior derecha ? escala de grises
-                        ImagenOriginal.SetPixel(x, y, Color.FromArgb(gris, gris, gris));
-                    }
-                    else
-                    {
-                        // Parte inferior izquierda ? blanco y negro
-                        if (gris > 128) ImagenOriginal.SetPixel(x, y, Color.White);
-                        else ImagenOriginal.SetPixel(x, y, Color.Black);
-                    }
-                }
-
-            }
-            pctLienzo.Image = ImagenResultado;
-            pctLienzo.Refresh();
         }
     }
 }
