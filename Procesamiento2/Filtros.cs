@@ -41,9 +41,6 @@ namespace Procesamiento2
                 return Color.FromArgb(255, 0, v, 0); // verde
         }
 
-        // ==============================
-        // Ejercicio 3 – Parte 2: Diagonal Blanco/Negro
-        // ==============================
         public static Color Ejercicio3_Diagonal(Color c, int x, int y, int ancho, int alto)
         {
             int gris = (c.R + c.G + c.B) / 3;
