@@ -123,19 +123,28 @@ namespace Procesamiento2
         private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ImagenResultado == null) return;
-            if (sfdGuardar.ShowDialog() == DialogResult.OK)
+
+            using (SaveFileDialog sfd = new SaveFileDialog())
             {
-                string ext = System.IO.Path.GetExtension(sfdGuardar.FileName).ToLower();
-                var formato = ext switch
+                sfd.Filter = "BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|GIF (*.gif)|*.gif|TIFF (*.tif;*.tiff)|*.tif;*.tiff";
+                sfd.DefaultExt = "png"; // extensión por defecto
+                sfd.AddExtension = true; // añade extensión automáticamente si no la pones
+
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    ".bmp" => ImageFormat.Bmp,
-                    ".png" => ImageFormat.Png,
-                    ".gif" => ImageFormat.Gif,
-                    ".tif" or ".tiff" => ImageFormat.Tiff,
-                    ".jpg" or ".jpeg" => ImageFormat.Jpeg,
-                    _ => ImageFormat.Png
-                };
-                ImagenResultado.Save(sfdGuardar.FileName, formato);
+                    string ext = System.IO.Path.GetExtension(sfd.FileName).ToLower();
+                    var formato = ext switch
+                    {
+                        ".bmp" => System.Drawing.Imaging.ImageFormat.Bmp,
+                        ".png" => System.Drawing.Imaging.ImageFormat.Png,
+                        ".gif" => System.Drawing.Imaging.ImageFormat.Gif,
+                        ".tif" or ".tiff" => System.Drawing.Imaging.ImageFormat.Tiff,
+                        ".jpg" or ".jpeg" => System.Drawing.Imaging.ImageFormat.Jpeg,
+                        _ => System.Drawing.Imaging.ImageFormat.Png
+                    };
+
+                    ImagenResultado.Save(sfd.FileName, formato);
+                }
             }
         }
 
