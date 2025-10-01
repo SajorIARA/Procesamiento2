@@ -119,7 +119,6 @@ namespace Procesamiento2
                 MostrarResultado();
             }
         }
-
         private void guardarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ImagenResultado == null) return;
@@ -147,7 +146,6 @@ namespace Procesamiento2
                 }
             }
         }
-
         private void salirToolStripMenuItem_Click(object sender, EventArgs e) => Close();
         private void imagenOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -155,7 +153,6 @@ namespace Procesamiento2
             ImagenResultado = new Bitmap(ImagenOriginal);
             MostrarResultado();
         }
-
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             if (ImagenOriginal == null) return;
@@ -165,7 +162,6 @@ namespace Procesamiento2
                 Math.Clamp(c.G + brillo, 0, 255),
                 Math.Clamp(c.B + brillo, 0, 255)));
         }
-
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             if (ImagenOriginal == null) return;
@@ -176,10 +172,8 @@ namespace Procesamiento2
                 Math.Clamp(c.G + rand.Next(-intensidad, intensidad + 1), 0, 255),
                 Math.Clamp(c.B + rand.Next(-intensidad, intensidad + 1), 0, 255)));
         }
-
         private void rojosincanalesToolStripMenuItem_Click(object sender, EventArgs e) =>
             AplicarFiltro(c => Filtros.RojoSinCanales(c, 50));
-
         private void cianToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Cian);
         private void magentaToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Magenta);
         private void rojoToolStripMenuItem_Click(object sender, EventArgs e) => AplicarFiltro(Filtros.Rojo);
@@ -237,20 +231,21 @@ namespace Procesamiento2
         {
             if (ImagenOriginal == null) return;
             seleccionando = true;
-            puntoInicialPB = e.Location;
             puntoInicialImg = PictureBoxToImageCoords(e.Location);
-            rectSeleccion = new Rectangle(e.Location, Size.Empty);
+            rectSeleccion = new Rectangle(puntoInicialImg, Size.Empty);
         }
 
         private void pctLienzo_MouseMove(object sender, MouseEventArgs e)
         {
             if (!seleccionando) return;
 
+            Point puntoActualImg = PictureBoxToImageCoords(e.Location);
+
             rectSeleccion = new Rectangle(
-                Math.Min(e.X, puntoInicialPB.X),
-                Math.Min(e.Y, puntoInicialPB.Y),
-                Math.Abs(e.X - puntoInicialPB.X),
-                Math.Abs(e.Y - puntoInicialPB.Y)
+                Math.Min(puntoInicialImg.X, puntoActualImg.X),
+                Math.Min(puntoInicialImg.Y, puntoActualImg.Y),
+                Math.Abs(puntoActualImg.X - puntoInicialImg.X),
+                Math.Abs(puntoActualImg.Y - puntoInicialImg.Y)
             );
 
             pctLienzo.Invalidate(); // repinta el PictureBox
@@ -262,24 +257,107 @@ namespace Procesamiento2
             seleccionando = false;
 
             Point puntoFinalImg = PictureBoxToImageCoords(e.Location);
-            Rectangle imgRect = new Rectangle(
+
+            rectSeleccion = new Rectangle(
                 Math.Min(puntoInicialImg.X, puntoFinalImg.X),
                 Math.Min(puntoInicialImg.Y, puntoFinalImg.Y),
                 Math.Abs(puntoFinalImg.X - puntoInicialImg.X),
                 Math.Abs(puntoFinalImg.Y - puntoInicialImg.Y)
             );
 
-            AplicarMosaico(imgRect);
+            pctLienzo.Invalidate();
         }
+        private Rectangle ImageToPictureBoxRect(Rectangle imgRect)
+        {
+            if (ImagenOriginal == null) return Rectangle.Empty;
+
+            int imgW = ImagenOriginal.Width;
+            int imgH = ImagenOriginal.Height;
+            int pbW = pctLienzo.Width;
+            int pbH = pctLienzo.Height;
+
+            if (pctLienzo.SizeMode == PictureBoxSizeMode.Zoom)
+            {
+                float ratio = Math.Min((float)pbW / imgW, (float)pbH / imgH);
+                float dispW = imgW * ratio;
+                float dispH = imgH * ratio;
+                float offsetX = (pbW - dispW) / 2f;
+                float offsetY = (pbH - dispH) / 2f;
+
+                return new Rectangle(
+                    (int)(imgRect.X * ratio + offsetX),
+                    (int)(imgRect.Y * ratio + offsetY),
+                    (int)(imgRect.Width * ratio),
+                    (int)(imgRect.Height * ratio)
+                );
+            }
+            else
+            {
+                return new Rectangle(
+                    imgRect.X * pbW / imgW,
+                    imgRect.Y * pbH / imgH,
+                    imgRect.Width * pbW / imgW,
+                    imgRect.Height * pbH / imgH
+                );
+            }
+        }
+
         private void pctLienzo_Paint(object sender, PaintEventArgs e)
         {
             if (rectSeleccion != Rectangle.Empty)
             {
                 using (Pen lapiz = new Pen(Color.Red, 2))
                 {
-                    e.Graphics.DrawRectangle(lapiz, rectSeleccion);
+                    Rectangle pbRect = ImageToPictureBoxRect(rectSeleccion);
+                    e.Graphics.DrawRectangle(lapiz, pbRect);
                 }
             }
         }
+
+        private void AplicarDistorsionDiagonal(Rectangle area)
+        {
+            if (ImagenOriginal == null || area.Width == 0 || area.Height == 0) return;
+
+            // Leer intensidad desde el TextBox
+            if (!int.TryParse(textBox1.Text, out int Maximo) || Maximo <= 0)
+                Maximo = 10;
+
+            Bitmap bmp = new Bitmap(ImagenOriginal);
+            Random rand = new Random();
+
+            for (int y = area.Top; y < area.Bottom; y++)
+            {
+                for (int x = area.Left; x < area.Right; x++)
+                {
+                    int desplazamiento = rand.Next(0, Maximo + 1);
+
+                    int nx = Math.Min(x + desplazamiento, ImagenOriginal.Width - 1);
+                    int ny = Math.Min(y + desplazamiento, ImagenOriginal.Height - 1);
+
+                    Color color = ImagenOriginal.GetPixel(nx, ny);
+                    bmp.SetPixel(x, y, color);
+                }
+            }
+
+            ImagenResultado = bmp;
+            MostrarResultado();
+        }
+
+        private void distorsionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AplicarDistorsionDiagonal(new Rectangle(0, 0, ImagenOriginal.Width, ImagenOriginal.Height));
+        }
+        private void aplicarMosaicoButton_Click(object sender, EventArgs e)
+        {
+            if (ImagenOriginal == null || rectSeleccion == Rectangle.Empty) return;
+            AplicarMosaico(rectSeleccion);
+        }
+
+        private void aplicarDistorsionButton_Click(object sender, EventArgs e)
+        {
+            if (ImagenOriginal == null || rectSeleccion == Rectangle.Empty) return;
+            AplicarDistorsionDiagonal(rectSeleccion);
+        }
+
     }
 }

@@ -21,7 +21,6 @@
         private System.Windows.Forms.ToolStripMenuItem sepiaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem negativoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem imagenOriginalToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mosaicoToolStripMenuItem;
         private System.Windows.Forms.TrackBar trackBar1; // brillo
         private System.Windows.Forms.TrackBar trackBar2; // ruido
         private System.Windows.Forms.TextBox textBox1;   // tamaño mosaico
@@ -46,14 +45,18 @@
             BlancoYNegroToolStripMenuItem = new ToolStripMenuItem();
             sepiaToolStripMenuItem = new ToolStripMenuItem();
             negativoToolStripMenuItem = new ToolStripMenuItem();
+            frangasToolStripMenuItem = new ToolStripMenuItem();
+            diagonalToolStripMenuItem = new ToolStripMenuItem();
             imagenOriginalToolStripMenuItem = new ToolStripMenuItem();
-            mosaicoToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripMenuItem();
+            mosaicoToolStripMenuItem1 = new ToolStripMenuItem();
+            distorcionToolStripMenuItem = new ToolStripMenuItem();
             trackBar1 = new TrackBar();
             trackBar2 = new TrackBar();
             textBox1 = new TextBox();
             sfdGuardar = new SaveFileDialog();
-            frangasToolStripMenuItem = new ToolStripMenuItem();
-            diagonalToolStripMenuItem = new ToolStripMenuItem();
+            button1 = new Button();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)pctLienzo).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
@@ -76,7 +79,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, filtrosToolStripMenuItem, imagenOriginalToolStripMenuItem, mosaicoToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, filtrosToolStripMenuItem, imagenOriginalToolStripMenuItem, toolStripMenuItem3 });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1024, 28);
@@ -117,77 +120,90 @@
             filtrosToolStripMenuItem.Name = "filtrosToolStripMenuItem";
             filtrosToolStripMenuItem.Size = new Size(63, 24);
             filtrosToolStripMenuItem.Text = "Filtros";
-            filtrosToolStripMenuItem.Click += ejercicio2FranjasToolStripMenuItem_Click;
             // 
             // rojoToolStripMenuItem
             // 
             rojoToolStripMenuItem.Name = "rojoToolStripMenuItem";
-            rojoToolStripMenuItem.Size = new Size(224, 26);
+            rojoToolStripMenuItem.Size = new Size(202, 26);
             rojoToolStripMenuItem.Text = "Rojo";
             rojoToolStripMenuItem.Click += rojoToolStripMenuItem_Click;
             // 
             // verdeToolStripMenuItem
             // 
             verdeToolStripMenuItem.Name = "verdeToolStripMenuItem";
-            verdeToolStripMenuItem.Size = new Size(224, 26);
+            verdeToolStripMenuItem.Size = new Size(202, 26);
             verdeToolStripMenuItem.Text = "Verde";
             verdeToolStripMenuItem.Click += verdeToolStripMenuItem_Click;
             // 
             // azulToolStripMenuItem
             // 
             azulToolStripMenuItem.Name = "azulToolStripMenuItem";
-            azulToolStripMenuItem.Size = new Size(224, 26);
+            azulToolStripMenuItem.Size = new Size(202, 26);
             azulToolStripMenuItem.Text = "Azul";
             azulToolStripMenuItem.Click += azulToolStripMenuItem_Click;
             // 
             // rojosincanalesToolStripMenuItem
             // 
             rojosincanalesToolStripMenuItem.Name = "rojosincanalesToolStripMenuItem";
-            rojosincanalesToolStripMenuItem.Size = new Size(224, 26);
+            rojosincanalesToolStripMenuItem.Size = new Size(202, 26);
             rojosincanalesToolStripMenuItem.Text = "Rojo Sin Canales";
             rojosincanalesToolStripMenuItem.Click += rojosincanalesToolStripMenuItem_Click;
             // 
             // cianToolStripMenuItem
             // 
             cianToolStripMenuItem.Name = "cianToolStripMenuItem";
-            cianToolStripMenuItem.Size = new Size(224, 26);
+            cianToolStripMenuItem.Size = new Size(202, 26);
             cianToolStripMenuItem.Text = "Cian";
             cianToolStripMenuItem.Click += cianToolStripMenuItem_Click;
             // 
             // magentaToolStripMenuItem
             // 
             magentaToolStripMenuItem.Name = "magentaToolStripMenuItem";
-            magentaToolStripMenuItem.Size = new Size(224, 26);
+            magentaToolStripMenuItem.Size = new Size(202, 26);
             magentaToolStripMenuItem.Text = "Magenta";
             magentaToolStripMenuItem.Click += magentaToolStripMenuItem_Click;
             // 
             // escalaDeGrisesToolStripMenuItem
             // 
             escalaDeGrisesToolStripMenuItem.Name = "escalaDeGrisesToolStripMenuItem";
-            escalaDeGrisesToolStripMenuItem.Size = new Size(224, 26);
+            escalaDeGrisesToolStripMenuItem.Size = new Size(202, 26);
             escalaDeGrisesToolStripMenuItem.Text = "Escala de grises";
             escalaDeGrisesToolStripMenuItem.Click += escalaDeGrisesToolStripMenuItem_Click;
             // 
             // BlancoYNegroToolStripMenuItem
             // 
             BlancoYNegroToolStripMenuItem.Name = "BlancoYNegroToolStripMenuItem";
-            BlancoYNegroToolStripMenuItem.Size = new Size(224, 26);
+            BlancoYNegroToolStripMenuItem.Size = new Size(202, 26);
             BlancoYNegroToolStripMenuItem.Text = "Blanco y Negro";
             BlancoYNegroToolStripMenuItem.Click += BlancoYNegroToolStripMenuItem_Click;
             // 
             // sepiaToolStripMenuItem
             // 
             sepiaToolStripMenuItem.Name = "sepiaToolStripMenuItem";
-            sepiaToolStripMenuItem.Size = new Size(224, 26);
+            sepiaToolStripMenuItem.Size = new Size(202, 26);
             sepiaToolStripMenuItem.Text = "Sepia";
             sepiaToolStripMenuItem.Click += sepiaToolStripMenuItem_Click;
             // 
             // negativoToolStripMenuItem
             // 
             negativoToolStripMenuItem.Name = "negativoToolStripMenuItem";
-            negativoToolStripMenuItem.Size = new Size(224, 26);
+            negativoToolStripMenuItem.Size = new Size(202, 26);
             negativoToolStripMenuItem.Text = "Negativo";
             negativoToolStripMenuItem.Click += negativoToolStripMenuItem_Click;
+            // 
+            // frangasToolStripMenuItem
+            // 
+            frangasToolStripMenuItem.Name = "frangasToolStripMenuItem";
+            frangasToolStripMenuItem.Size = new Size(202, 26);
+            frangasToolStripMenuItem.Text = "Frangas";
+            frangasToolStripMenuItem.Click += ejercicio2FranjasToolStripMenuItem_Click;
+            // 
+            // diagonalToolStripMenuItem
+            // 
+            diagonalToolStripMenuItem.Name = "diagonalToolStripMenuItem";
+            diagonalToolStripMenuItem.Size = new Size(202, 26);
+            diagonalToolStripMenuItem.Text = "Diagonal";
+            diagonalToolStripMenuItem.Click += ejercicio3DiagonalToolStripMenuItem_Click;
             // 
             // imagenOriginalToolStripMenuItem
             // 
@@ -196,12 +212,26 @@
             imagenOriginalToolStripMenuItem.Text = "ImagenOriginal";
             imagenOriginalToolStripMenuItem.Click += imagenOriginalToolStripMenuItem_Click;
             // 
-            // mosaicoToolStripMenuItem
+            // toolStripMenuItem3
             // 
-            mosaicoToolStripMenuItem.Name = "mosaicoToolStripMenuItem";
-            mosaicoToolStripMenuItem.Size = new Size(79, 24);
-            mosaicoToolStripMenuItem.Text = "Mosaico";
-            mosaicoToolStripMenuItem.Click += mosaicoToolStripMenuItem_Click;
+            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { mosaicoToolStripMenuItem1, distorcionToolStripMenuItem });
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(71, 24);
+            toolStripMenuItem3.Text = "Efectos";
+            // 
+            // mosaicoToolStripMenuItem1
+            // 
+            mosaicoToolStripMenuItem1.Name = "mosaicoToolStripMenuItem1";
+            mosaicoToolStripMenuItem1.Size = new Size(160, 26);
+            mosaicoToolStripMenuItem1.Text = "Mosaico";
+            mosaicoToolStripMenuItem1.Click += mosaicoToolStripMenuItem_Click;
+            // 
+            // distorcionToolStripMenuItem
+            // 
+            distorcionToolStripMenuItem.Name = "distorcionToolStripMenuItem";
+            distorcionToolStripMenuItem.Size = new Size(160, 26);
+            distorcionToolStripMenuItem.Text = "Distorcion";
+            distorcionToolStripMenuItem.Click += distorsionToolStripMenuItem_Click;
             // 
             // trackBar1
             // 
@@ -230,22 +260,31 @@
             textBox1.TabIndex = 0;
             textBox1.Text = "10";
             // 
-            // frangasToolStripMenuItem
+            // button1
             // 
-            frangasToolStripMenuItem.Name = "frangasToolStripMenuItem";
-            frangasToolStripMenuItem.Size = new Size(224, 26);
-            frangasToolStripMenuItem.Text = "Frangas";
+            button1.Location = new Point(830, 208);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 3;
+            button1.Text = "Mosaico";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += aplicarMosaicoButton_Click;
             // 
-            // diagonalToolStripMenuItem
+            // button2
             // 
-            diagonalToolStripMenuItem.Name = "diagonalToolStripMenuItem";
-            diagonalToolStripMenuItem.Size = new Size(224, 26);
-            diagonalToolStripMenuItem.Text = "Diagonal";
-            diagonalToolStripMenuItem.Click += ejercicio3DiagonalToolStripMenuItem_Click;
+            button2.Location = new Point(830, 270);
+            button2.Name = "button2";
+            button2.Size = new Size(94, 29);
+            button2.TabIndex = 4;
+            button2.Text = "Distorcion";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += aplicarDistorsionButton_Click;
             // 
             // Form1
             // 
             ClientSize = new Size(1024, 600);
+            Controls.Add(button2);
+            Controls.Add(button1);
             Controls.Add(textBox1);
             Controls.Add(trackBar2);
             Controls.Add(trackBar1);
@@ -265,5 +304,10 @@
         }
         private ToolStripMenuItem frangasToolStripMenuItem;
         private ToolStripMenuItem diagonalToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem3;
+        private ToolStripMenuItem mosaicoToolStripMenuItem1;
+        private ToolStripMenuItem distorcionToolStripMenuItem;
+        private Button button1;
+        private Button button2;
     }
 }

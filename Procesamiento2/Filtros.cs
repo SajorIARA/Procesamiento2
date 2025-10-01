@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Procesamiento2
 {
     public static class Filtros
     {
+        private static Random rand = new Random();
+
         public static Color Rojo(Color c) => Color.FromArgb(255, (c.R + c.G + c.B) / 3, 0, 0);
         public static Color Verde(Color c) => Color.FromArgb(255, 0, (c.R + c.G + c.B) / 3, 0);
         public static Color Azul(Color c) => Color.FromArgb(255, 0, 0, (c.R + c.G + c.B) / 3);
