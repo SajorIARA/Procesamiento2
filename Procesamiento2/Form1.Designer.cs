@@ -47,20 +47,38 @@
             negativoToolStripMenuItem = new ToolStripMenuItem();
             frangasToolStripMenuItem = new ToolStripMenuItem();
             diagonalToolStripMenuItem = new ToolStripMenuItem();
+            quitarToolStripMenuItem = new ToolStripMenuItem();
+            rojoToolStripMenuItem1 = new ToolStripMenuItem();
+            azulToolStripMenuItem1 = new ToolStripMenuItem();
+            verdeToolStripMenuItem1 = new ToolStripMenuItem();
+            invertirRGBToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            bRGToolStripMenuItem = new ToolStripMenuItem();
+            bGRToolStripMenuItem = new ToolStripMenuItem();
+            gRBToolStripMenuItem = new ToolStripMenuItem();
+            gRBToolStripMenuItem1 = new ToolStripMenuItem();
             imagenOriginalToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             mosaicoToolStripMenuItem1 = new ToolStripMenuItem();
             distorcionToolStripMenuItem = new ToolStripMenuItem();
+            mosaicoRectangularToolStripMenuItem = new ToolStripMenuItem();
+            distorcionHorizontalToolStripMenuItem = new ToolStripMenuItem();
+            espejoToolStripMenuItem = new ToolStripMenuItem();
             trackBar1 = new TrackBar();
             trackBar2 = new TrackBar();
             textBox1 = new TextBox();
             sfdGuardar = new SaveFileDialog();
             button1 = new Button();
             button2 = new Button();
+            trackBar4 = new TrackBar();
+            textBoxAncho = new TextBox();
+            textBoxAlto = new TextBox();
+            brilloToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pctLienzo).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBar2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar4).BeginInit();
             SuspendLayout();
             // 
             // pctLienzo
@@ -116,7 +134,7 @@
             // 
             // filtrosToolStripMenuItem
             // 
-            filtrosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem, verdeToolStripMenuItem, azulToolStripMenuItem, rojosincanalesToolStripMenuItem, cianToolStripMenuItem, magentaToolStripMenuItem, escalaDeGrisesToolStripMenuItem, BlancoYNegroToolStripMenuItem, sepiaToolStripMenuItem, negativoToolStripMenuItem, frangasToolStripMenuItem, diagonalToolStripMenuItem });
+            filtrosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem, verdeToolStripMenuItem, azulToolStripMenuItem, rojosincanalesToolStripMenuItem, cianToolStripMenuItem, magentaToolStripMenuItem, escalaDeGrisesToolStripMenuItem, BlancoYNegroToolStripMenuItem, sepiaToolStripMenuItem, negativoToolStripMenuItem, frangasToolStripMenuItem, diagonalToolStripMenuItem, quitarToolStripMenuItem, invertirRGBToolStripMenuItem });
             filtrosToolStripMenuItem.Name = "filtrosToolStripMenuItem";
             filtrosToolStripMenuItem.Size = new Size(63, 24);
             filtrosToolStripMenuItem.Text = "Filtros";
@@ -205,6 +223,76 @@
             diagonalToolStripMenuItem.Text = "Diagonal";
             diagonalToolStripMenuItem.Click += ejercicio3DiagonalToolStripMenuItem_Click;
             // 
+            // quitarToolStripMenuItem
+            // 
+            quitarToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rojoToolStripMenuItem1, azulToolStripMenuItem1, verdeToolStripMenuItem1 });
+            quitarToolStripMenuItem.Name = "quitarToolStripMenuItem";
+            quitarToolStripMenuItem.Size = new Size(202, 26);
+            quitarToolStripMenuItem.Text = "Quitar";
+            // 
+            // rojoToolStripMenuItem1
+            // 
+            rojoToolStripMenuItem1.Name = "rojoToolStripMenuItem1";
+            rojoToolStripMenuItem1.Size = new Size(130, 26);
+            rojoToolStripMenuItem1.Text = "Rojo";
+            rojoToolStripMenuItem1.Click += rojoToolStripMenuItem1_Click;
+            // 
+            // azulToolStripMenuItem1
+            // 
+            azulToolStripMenuItem1.Name = "azulToolStripMenuItem1";
+            azulToolStripMenuItem1.Size = new Size(130, 26);
+            azulToolStripMenuItem1.Text = "Azul";
+            azulToolStripMenuItem1.Click += azulToolStripMenuItem1_Click;
+            // 
+            // verdeToolStripMenuItem1
+            // 
+            verdeToolStripMenuItem1.Name = "verdeToolStripMenuItem1";
+            verdeToolStripMenuItem1.Size = new Size(130, 26);
+            verdeToolStripMenuItem1.Text = "Verde";
+            verdeToolStripMenuItem1.Click += verdeToolStripMenuItem1_Click;
+            // 
+            // invertirRGBToolStripMenuItem
+            // 
+            invertirRGBToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem1, bRGToolStripMenuItem, bGRToolStripMenuItem, gRBToolStripMenuItem, gRBToolStripMenuItem1 });
+            invertirRGBToolStripMenuItem.Name = "invertirRGBToolStripMenuItem";
+            invertirRGBToolStripMenuItem.Size = new Size(202, 26);
+            invertirRGBToolStripMenuItem.Text = "Invertir RGB";
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(120, 26);
+            toolStripMenuItem1.Text = "RBG";
+            toolStripMenuItem1.Click += rBGtoolStripMenuItem1_Click;
+            // 
+            // bRGToolStripMenuItem
+            // 
+            bRGToolStripMenuItem.Name = "bRGToolStripMenuItem";
+            bRGToolStripMenuItem.Size = new Size(120, 26);
+            bRGToolStripMenuItem.Text = "BRG";
+            bRGToolStripMenuItem.Click += bRGToolStripMenuItem_Click;
+            // 
+            // bGRToolStripMenuItem
+            // 
+            bGRToolStripMenuItem.Name = "bGRToolStripMenuItem";
+            bGRToolStripMenuItem.Size = new Size(120, 26);
+            bGRToolStripMenuItem.Text = "BGR";
+            bGRToolStripMenuItem.Click += bGBToolStripMenuItem_Click;
+            // 
+            // gRBToolStripMenuItem
+            // 
+            gRBToolStripMenuItem.Name = "gRBToolStripMenuItem";
+            gRBToolStripMenuItem.Size = new Size(120, 26);
+            gRBToolStripMenuItem.Text = "GBR";
+            gRBToolStripMenuItem.Click += gBRToolStripMenuItem_Click;
+            // 
+            // gRBToolStripMenuItem1
+            // 
+            gRBToolStripMenuItem1.Name = "gRBToolStripMenuItem1";
+            gRBToolStripMenuItem1.Size = new Size(120, 26);
+            gRBToolStripMenuItem1.Text = "GRB";
+            gRBToolStripMenuItem1.Click += gRBToolStripMenuItem1_Click;
+            // 
             // imagenOriginalToolStripMenuItem
             // 
             imagenOriginalToolStripMenuItem.Name = "imagenOriginalToolStripMenuItem";
@@ -214,7 +302,7 @@
             // 
             // toolStripMenuItem3
             // 
-            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { mosaicoToolStripMenuItem1, distorcionToolStripMenuItem });
+            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { brilloToolStripMenuItem, mosaicoToolStripMenuItem1, distorcionToolStripMenuItem, mosaicoRectangularToolStripMenuItem, distorcionHorizontalToolStripMenuItem, espejoToolStripMenuItem });
             toolStripMenuItem3.Name = "toolStripMenuItem3";
             toolStripMenuItem3.Size = new Size(71, 24);
             toolStripMenuItem3.Text = "Efectos";
@@ -222,16 +310,37 @@
             // mosaicoToolStripMenuItem1
             // 
             mosaicoToolStripMenuItem1.Name = "mosaicoToolStripMenuItem1";
-            mosaicoToolStripMenuItem1.Size = new Size(160, 26);
+            mosaicoToolStripMenuItem1.Size = new Size(230, 26);
             mosaicoToolStripMenuItem1.Text = "Mosaico";
             mosaicoToolStripMenuItem1.Click += mosaicoToolStripMenuItem_Click;
             // 
             // distorcionToolStripMenuItem
             // 
             distorcionToolStripMenuItem.Name = "distorcionToolStripMenuItem";
-            distorcionToolStripMenuItem.Size = new Size(160, 26);
+            distorcionToolStripMenuItem.Size = new Size(230, 26);
             distorcionToolStripMenuItem.Text = "Distorcion";
             distorcionToolStripMenuItem.Click += distorsionToolStripMenuItem_Click;
+            // 
+            // mosaicoRectangularToolStripMenuItem
+            // 
+            mosaicoRectangularToolStripMenuItem.Name = "mosaicoRectangularToolStripMenuItem";
+            mosaicoRectangularToolStripMenuItem.Size = new Size(230, 26);
+            mosaicoRectangularToolStripMenuItem.Text = "MosaicoRectangular";
+            mosaicoRectangularToolStripMenuItem.Click += mosaicoRectangularToolStripMenuItem_Click;
+            // 
+            // distorcionHorizontalToolStripMenuItem
+            // 
+            distorcionHorizontalToolStripMenuItem.Name = "distorcionHorizontalToolStripMenuItem";
+            distorcionHorizontalToolStripMenuItem.Size = new Size(230, 26);
+            distorcionHorizontalToolStripMenuItem.Text = "DistorcionHorizontal";
+            distorcionHorizontalToolStripMenuItem.Click += distorcionHorizontalToolStripMenuItem_Click;
+            // 
+            // espejoToolStripMenuItem
+            // 
+            espejoToolStripMenuItem.Name = "espejoToolStripMenuItem";
+            espejoToolStripMenuItem.Size = new Size(230, 26);
+            espejoToolStripMenuItem.Text = "Espejo";
+            espejoToolStripMenuItem.Click += espejoToolStripMenuItem_Click;
             // 
             // trackBar1
             // 
@@ -241,6 +350,7 @@
             trackBar1.Name = "trackBar1";
             trackBar1.Size = new Size(182, 56);
             trackBar1.TabIndex = 2;
+            trackBar1.TickFrequency = 10;
             trackBar1.Scroll += trackBar1_Scroll;
             // 
             // trackBar2
@@ -262,7 +372,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(830, 208);
+            button1.Location = new Point(818, 208);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 3;
@@ -272,7 +382,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(830, 270);
+            button2.Location = new Point(918, 208);
             button2.Name = "button2";
             button2.Size = new Size(94, 29);
             button2.TabIndex = 4;
@@ -280,9 +390,44 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += aplicarDistorsionButton_Click;
             // 
+            // trackBar4
+            // 
+            trackBar4.Location = new Point(830, 311);
+            trackBar4.Maximum = 100;
+            trackBar4.Name = "trackBar4";
+            trackBar4.Size = new Size(182, 56);
+            trackBar4.TabIndex = 7;
+            trackBar4.TickFrequency = 10;
+            trackBar4.Scroll += trackBar4_Scroll;
+            // 
+            // textBoxAncho
+            // 
+            textBoxAncho.Location = new Point(918, 389);
+            textBoxAncho.Name = "textBoxAncho";
+            textBoxAncho.Size = new Size(77, 27);
+            textBoxAncho.TabIndex = 8;
+            textBoxAncho.Text = "10";
+            // 
+            // textBoxAlto
+            // 
+            textBoxAlto.Location = new Point(835, 389);
+            textBoxAlto.Name = "textBoxAlto";
+            textBoxAlto.Size = new Size(77, 27);
+            textBoxAlto.TabIndex = 9;
+            textBoxAlto.Text = "10";
+            // 
+            // brilloToolStripMenuItem
+            // 
+            brilloToolStripMenuItem.Name = "brilloToolStripMenuItem";
+            brilloToolStripMenuItem.Size = new Size(230, 26);
+            brilloToolStripMenuItem.Text = "Brillo";
+            // 
             // Form1
             // 
             ClientSize = new Size(1024, 600);
+            Controls.Add(textBoxAlto);
+            Controls.Add(textBoxAncho);
+            Controls.Add(trackBar4);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(textBox1);
@@ -299,6 +444,7 @@
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBar2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBar4).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -309,5 +455,22 @@
         private ToolStripMenuItem distorcionToolStripMenuItem;
         private Button button1;
         private Button button2;
+        private TrackBar trackBar4;
+        private TextBox textBoxAncho;
+        private TextBox textBoxAlto;
+        private ToolStripMenuItem mosaicoRectangularToolStripMenuItem;
+        private ToolStripMenuItem distorcionHorizontalToolStripMenuItem;
+        private ToolStripMenuItem quitarToolStripMenuItem;
+        private ToolStripMenuItem rojoToolStripMenuItem1;
+        private ToolStripMenuItem azulToolStripMenuItem1;
+        private ToolStripMenuItem verdeToolStripMenuItem1;
+        private ToolStripMenuItem invertirRGBToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem bRGToolStripMenuItem;
+        private ToolStripMenuItem bGRToolStripMenuItem;
+        private ToolStripMenuItem gRBToolStripMenuItem;
+        private ToolStripMenuItem gRBToolStripMenuItem1;
+        private ToolStripMenuItem espejoToolStripMenuItem;
+        private ToolStripMenuItem brilloToolStripMenuItem;
     }
 }
