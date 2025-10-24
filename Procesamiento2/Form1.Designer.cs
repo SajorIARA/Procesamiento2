@@ -59,11 +59,15 @@
             gRBToolStripMenuItem1 = new ToolStripMenuItem();
             imagenOriginalToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
+            brilloToolStripMenuItem = new ToolStripMenuItem();
             mosaicoToolStripMenuItem1 = new ToolStripMenuItem();
             distorcionToolStripMenuItem = new ToolStripMenuItem();
             mosaicoRectangularToolStripMenuItem = new ToolStripMenuItem();
             distorcionHorizontalToolStripMenuItem = new ToolStripMenuItem();
             espejoToolStripMenuItem = new ToolStripMenuItem();
+            histogramaToolStripMenuItem = new ToolStripMenuItem();
+            escalaDeGricesToolStripMenuItem = new ToolStripMenuItem();
+            rGBToolStripMenuItem = new ToolStripMenuItem();
             trackBar1 = new TrackBar();
             trackBar2 = new TrackBar();
             textBox1 = new TextBox();
@@ -73,7 +77,8 @@
             trackBar4 = new TrackBar();
             textBoxAncho = new TextBox();
             textBoxAlto = new TextBox();
-            brilloToolStripMenuItem = new ToolStripMenuItem();
+            ecualizarToolStripMenuItem = new ToolStripMenuItem();
+            mejorarImagenToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pctLienzo).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
@@ -97,7 +102,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, filtrosToolStripMenuItem, imagenOriginalToolStripMenuItem, toolStripMenuItem3 });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { archivoToolStripMenuItem, filtrosToolStripMenuItem, imagenOriginalToolStripMenuItem, toolStripMenuItem3, histogramaToolStripMenuItem, ecualizarToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1024, 28);
@@ -307,6 +312,12 @@
             toolStripMenuItem3.Size = new Size(71, 24);
             toolStripMenuItem3.Text = "Efectos";
             // 
+            // brilloToolStripMenuItem
+            // 
+            brilloToolStripMenuItem.Name = "brilloToolStripMenuItem";
+            brilloToolStripMenuItem.Size = new Size(230, 26);
+            brilloToolStripMenuItem.Text = "Brillo";
+            // 
             // mosaicoToolStripMenuItem1
             // 
             mosaicoToolStripMenuItem1.Name = "mosaicoToolStripMenuItem1";
@@ -341,6 +352,27 @@
             espejoToolStripMenuItem.Size = new Size(230, 26);
             espejoToolStripMenuItem.Text = "Espejo";
             espejoToolStripMenuItem.Click += espejoToolStripMenuItem_Click;
+            // 
+            // histogramaToolStripMenuItem
+            // 
+            histogramaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { escalaDeGricesToolStripMenuItem, rGBToolStripMenuItem });
+            histogramaToolStripMenuItem.Name = "histogramaToolStripMenuItem";
+            histogramaToolStripMenuItem.Size = new Size(101, 24);
+            histogramaToolStripMenuItem.Text = "Histograma";
+            // 
+            // escalaDeGricesToolStripMenuItem
+            // 
+            escalaDeGricesToolStripMenuItem.Name = "escalaDeGricesToolStripMenuItem";
+            escalaDeGricesToolStripMenuItem.Size = new Size(197, 26);
+            escalaDeGricesToolStripMenuItem.Text = "Escala de grices";
+            escalaDeGricesToolStripMenuItem.Click += histogramaToolStripMenuItem_Click_1;
+            // 
+            // rGBToolStripMenuItem
+            // 
+            rGBToolStripMenuItem.Name = "rGBToolStripMenuItem";
+            rGBToolStripMenuItem.Size = new Size(197, 26);
+            rGBToolStripMenuItem.Text = "RGB";
+            rGBToolStripMenuItem.Click += rGBToolStripMenuItem_Click;
             // 
             // trackBar1
             // 
@@ -416,11 +448,19 @@
             textBoxAlto.TabIndex = 9;
             textBoxAlto.Text = "10";
             // 
-            // brilloToolStripMenuItem
+            // ecualizarToolStripMenuItem
             // 
-            brilloToolStripMenuItem.Name = "brilloToolStripMenuItem";
-            brilloToolStripMenuItem.Size = new Size(230, 26);
-            brilloToolStripMenuItem.Text = "Brillo";
+            ecualizarToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mejorarImagenToolStripMenuItem });
+            ecualizarToolStripMenuItem.Name = "ecualizarToolStripMenuItem";
+            ecualizarToolStripMenuItem.Size = new Size(82, 24);
+            ecualizarToolStripMenuItem.Text = "Ecualizar";
+            // 
+            // mejorarImagenToolStripMenuItem
+            // 
+            mejorarImagenToolStripMenuItem.Name = "mejorarImagenToolStripMenuItem";
+            mejorarImagenToolStripMenuItem.Size = new Size(224, 26);
+            mejorarImagenToolStripMenuItem.Text = "Mejorar Imagen";
+            mejorarImagenToolStripMenuItem.Click += mejorarImagenToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -472,5 +512,10 @@
         private ToolStripMenuItem gRBToolStripMenuItem1;
         private ToolStripMenuItem espejoToolStripMenuItem;
         private ToolStripMenuItem brilloToolStripMenuItem;
+        private ToolStripMenuItem histogramaToolStripMenuItem;
+        private ToolStripMenuItem escalaDeGricesToolStripMenuItem;
+        private ToolStripMenuItem rGBToolStripMenuItem;
+        private ToolStripMenuItem ecualizarToolStripMenuItem;
+        private ToolStripMenuItem mejorarImagenToolStripMenuItem;
     }
 }
