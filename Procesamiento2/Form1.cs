@@ -713,13 +713,20 @@ namespace Procesamiento2
             histForm.Controls.Add(pb);
             histForm.Show();
         }
-
         private void rGBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ImagenOriginal == null) return;
+            // Usar la imagen actual mostrada en pctLienzo
+            Bitmap imagenParaHistograma = pctLienzo.Image as Bitmap;
 
-            int ancho = ImagenOriginal.Width;
-            int alto = ImagenOriginal.Height;
+            if (imagenParaHistograma == null && ImagenOriginal != null)
+            {
+                imagenParaHistograma = ImagenOriginal;
+            }
+
+            if (imagenParaHistograma == null) return;
+
+            int ancho = imagenParaHistograma.Width;
+            int alto = imagenParaHistograma.Height;
 
             // Histogramas para cada canal
             int[] histogramaR = new int[256];
@@ -732,7 +739,7 @@ namespace Procesamiento2
             {
                 for (int x = 0; x < ancho; x++)
                 {
-                    Color c = ImagenOriginal.GetPixel(x, y);
+                    Color c = imagenParaHistograma.GetPixel(x, y);
                     histogramaR[c.R]++;
                     histogramaG[c.G]++;
                     histogramaB[c.B]++;
@@ -768,7 +775,6 @@ namespace Procesamiento2
             histForm.Controls.Add(mainPanel);
             histForm.Show();
         }
-
         private Panel CrearPanelHistograma(string titulo, int[] histograma, Color colorCanal, int totalPixeles)
         {
             Panel panel = new Panel
@@ -881,7 +887,6 @@ namespace Procesamiento2
 
             return panel;
         }
-
         private void mejorarImagenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ImagenOriginal == null) return;
@@ -994,10 +999,148 @@ namespace Procesamiento2
 
             ImagenResultado = bmp;
             MostrarResultado();
+        }
+        private void mJRGBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ImagenOriginal == null) return;
 
-            // OPCIONAL: Mostrar automáticamente el histograma después de mejorar
-            // Descomenta la siguiente línea si quieres que se abra automáticamente
-            // MostrarHistograma(ImagenResultado, "Histograma - Imagen Mejorada");
+            int sharpenAmount = 50;
+            if (!int.TryParse(textBox1.Text, out sharpenAmount)) sharpenAmount = 50;
+            sharpenAmount = Math.Clamp(sharpenAmount, 0, 200);
+
+            Bitmap bmp = new Bitmap(ImagenOriginal);
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            // Bloquear bits para acceso directo
+            Rectangle rect = new Rectangle(0, 0, width, height);
+            System.Drawing.Imaging.BitmapData data = bmp.LockBits(rect,
+                System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
+
+            int bpp = Image.GetPixelFormatSize(bmp.PixelFormat) / 8;
+            int stride = data.Stride;
+            IntPtr ptr = data.Scan0;
+            int bytes = Math.Abs(stride) * height;
+            byte[] rgbValues = new byte[bytes];
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            // --- Ecualizar histograma por canal RGB independientemente ---
+
+            // Calcular histogramas para cada canal
+            int[] histR = new int[256];
+            int[] histG = new int[256];
+            int[] histB = new int[256];
+
+            for (int i = 0; i < bytes; i += bpp)
+            {
+                histR[rgbValues[i + 2]]++;  // R
+                histG[rgbValues[i + 1]]++;  // G
+                histB[rgbValues[i]]++;      // B
+            }
+
+            int totalPixeles = width * height;
+
+            // Crear mapas de transformación CDF para cada canal
+            byte[] mapR = CrearMapaEcualizacion(histR, totalPixeles);
+            byte[] mapG = CrearMapaEcualizacion(histG, totalPixeles);
+            byte[] mapB = CrearMapaEcualizacion(histB, totalPixeles);
+
+            // Aplicar ecualización por canal
+            for (int i = 0; i < bytes; i += bpp)
+            {
+                rgbValues[i + 2] = mapR[rgbValues[i + 2]];  // R
+                rgbValues[i + 1] = mapG[rgbValues[i + 1]];  // G
+                rgbValues[i] = mapB[rgbValues[i]];          // B
+            }
+
+            // --- Filtro Gaussiano 3x3 para suavizado ---
+            byte[] blur = new byte[bytes];
+            int[] kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+            int kernelSum = 16;
+
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    double r = 0, g = 0, b = 0;
+                    int k = 0;
+                    for (int yy = -1; yy <= 1; yy++)
+                    {
+                        for (int xx = -1; xx <= 1; xx++, k++)
+                        {
+                            int pos = ((y + yy) * stride) + (x + xx) * bpp;
+                            b += rgbValues[pos] * kernel[k];
+                            g += rgbValues[pos + 1] * kernel[k];
+                            r += rgbValues[pos + 2] * kernel[k];
+                        }
+                    }
+                    int p = (y * stride) + (x * bpp);
+                    blur[p] = (byte)(b / kernelSum);
+                    blur[p + 1] = (byte)(g / kernelSum);
+                    blur[p + 2] = (byte)(r / kernelSum);
+                }
+            }
+
+            // --- Unsharp Mask (enfoque) ---
+            double factor = sharpenAmount / 100.0;
+            for (int i = 0; i < bytes; i += bpp)
+            {
+                double r = rgbValues[i + 2];
+                double g = rgbValues[i + 1];
+                double b = rgbValues[i];
+                double rb = blur[i + 2];
+                double gb = blur[i + 1];
+                double bb = blur[i];
+                rgbValues[i + 2] = (byte)Math.Clamp(r + factor * (r - rb), 0, 255);
+                rgbValues[i + 1] = (byte)Math.Clamp(g + factor * (g - gb), 0, 255);
+                rgbValues[i] = (byte)Math.Clamp(b + factor * (b - bb), 0, 255);
+            }
+
+            // Copiar de vuelta al bitmap
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            bmp.UnlockBits(data);
+
+            ImagenResultado = bmp;
+            MostrarResultado();
+        }
+        private byte[] CrearMapaEcualizacion(int[] histograma, int totalPixeles)
+        {
+            // Calcular CDF (Función de Distribución Acumulativa)
+            int[] cdf = new int[256];
+            int acumulado = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                acumulado += histograma[i];
+                cdf[i] = acumulado;
+            }
+
+            // Encontrar el primer valor no cero del CDF
+            int cdfMin = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                if (cdf[i] > 0)
+                {
+                    cdfMin = cdf[i];
+                    break;
+                }
+            }
+
+            // Crear mapa de transformación
+            byte[] mapa = new byte[256];
+            for (int i = 0; i < 256; i++)
+            {
+                if (cdf[i] == 0)
+                {
+                    mapa[i] = 0;
+                }
+                else
+                {
+                    double valor = ((double)(cdf[i] - cdfMin) / (totalPixeles - cdfMin)) * 255.0;
+                    mapa[i] = (byte)Math.Clamp(valor, 0, 255);
+                }
+            }
+
+            return mapa;
         }
     }
 }

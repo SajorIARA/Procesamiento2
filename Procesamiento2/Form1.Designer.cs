@@ -68,6 +68,8 @@
             histogramaToolStripMenuItem = new ToolStripMenuItem();
             escalaDeGricesToolStripMenuItem = new ToolStripMenuItem();
             rGBToolStripMenuItem = new ToolStripMenuItem();
+            ecualizarToolStripMenuItem = new ToolStripMenuItem();
+            mejorarImagenToolStripMenuItem = new ToolStripMenuItem();
             trackBar1 = new TrackBar();
             trackBar2 = new TrackBar();
             textBox1 = new TextBox();
@@ -77,8 +79,7 @@
             trackBar4 = new TrackBar();
             textBoxAncho = new TextBox();
             textBoxAlto = new TextBox();
-            ecualizarToolStripMenuItem = new ToolStripMenuItem();
-            mejorarImagenToolStripMenuItem = new ToolStripMenuItem();
+            mJRGBToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)pctLienzo).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
@@ -374,6 +375,20 @@
             rGBToolStripMenuItem.Text = "RGB";
             rGBToolStripMenuItem.Click += rGBToolStripMenuItem_Click;
             // 
+            // ecualizarToolStripMenuItem
+            // 
+            ecualizarToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mejorarImagenToolStripMenuItem, mJRGBToolStripMenuItem });
+            ecualizarToolStripMenuItem.Name = "ecualizarToolStripMenuItem";
+            ecualizarToolStripMenuItem.Size = new Size(82, 24);
+            ecualizarToolStripMenuItem.Text = "Ecualizar";
+            // 
+            // mejorarImagenToolStripMenuItem
+            // 
+            mejorarImagenToolStripMenuItem.Name = "mejorarImagenToolStripMenuItem";
+            mejorarImagenToolStripMenuItem.Size = new Size(224, 26);
+            mejorarImagenToolStripMenuItem.Text = "Mejorar Imagen";
+            mejorarImagenToolStripMenuItem.Click += mejorarImagenToolStripMenuItem_Click;
+            // 
             // trackBar1
             // 
             trackBar1.Location = new Point(830, 40);
@@ -448,19 +463,12 @@
             textBoxAlto.TabIndex = 9;
             textBoxAlto.Text = "10";
             // 
-            // ecualizarToolStripMenuItem
+            // mJRGBToolStripMenuItem
             // 
-            ecualizarToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mejorarImagenToolStripMenuItem });
-            ecualizarToolStripMenuItem.Name = "ecualizarToolStripMenuItem";
-            ecualizarToolStripMenuItem.Size = new Size(82, 24);
-            ecualizarToolStripMenuItem.Text = "Ecualizar";
-            // 
-            // mejorarImagenToolStripMenuItem
-            // 
-            mejorarImagenToolStripMenuItem.Name = "mejorarImagenToolStripMenuItem";
-            mejorarImagenToolStripMenuItem.Size = new Size(224, 26);
-            mejorarImagenToolStripMenuItem.Text = "Mejorar Imagen";
-            mejorarImagenToolStripMenuItem.Click += mejorarImagenToolStripMenuItem_Click;
+            mJRGBToolStripMenuItem.Name = "mJRGBToolStripMenuItem";
+            mJRGBToolStripMenuItem.Size = new Size(224, 26);
+            mJRGBToolStripMenuItem.Text = "MJ RGB";
+            mJRGBToolStripMenuItem.Click += mJRGBToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -517,5 +525,6 @@
         private ToolStripMenuItem rGBToolStripMenuItem;
         private ToolStripMenuItem ecualizarToolStripMenuItem;
         private ToolStripMenuItem mejorarImagenToolStripMenuItem;
+        private ToolStripMenuItem mJRGBToolStripMenuItem;
     }
 }
