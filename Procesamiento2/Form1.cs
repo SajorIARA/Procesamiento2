@@ -1024,36 +1024,89 @@ namespace Procesamiento2
             byte[] rgbValues = new byte[bytes];
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            // --- Ecualizar histograma por canal RGB independientemente ---
-
-            // Calcular histogramas para cada canal
+            // --- PASO 1: Auto-Contrast suave (ignorar extremos) ---
+            // Encontrar percentiles 2% y 98% por canal para ignorar outliers
             int[] histR = new int[256];
             int[] histG = new int[256];
             int[] histB = new int[256];
 
             for (int i = 0; i < bytes; i += bpp)
             {
-                histR[rgbValues[i + 2]]++;  // R
-                histG[rgbValues[i + 1]]++;  // G
-                histB[rgbValues[i]]++;      // B
+                histR[rgbValues[i + 2]]++;
+                histG[rgbValues[i + 1]]++;
+                histB[rgbValues[i]]++;
             }
 
             int totalPixeles = width * height;
+            int umbral = (int)(totalPixeles * 0.02); // 2% de píxeles
 
-            // Crear mapas de transformación CDF para cada canal
-            byte[] mapR = CrearMapaEcualizacion(histR, totalPixeles);
-            byte[] mapG = CrearMapaEcualizacion(histG, totalPixeles);
-            byte[] mapB = CrearMapaEcualizacion(histB, totalPixeles);
+            byte minR = EncontrarPercentil(histR, umbral);
+            byte maxR = EncontrarPercentil(histR, totalPixeles - umbral);
+            byte minG = EncontrarPercentil(histG, umbral);
+            byte maxG = EncontrarPercentil(histG, totalPixeles - umbral);
+            byte minB = EncontrarPercentil(histB, umbral);
+            byte maxB = EncontrarPercentil(histB, totalPixeles - umbral);
 
-            // Aplicar ecualización por canal
+            // Aplicar estiramiento suave
             for (int i = 0; i < bytes; i += bpp)
             {
-                rgbValues[i + 2] = mapR[rgbValues[i + 2]];  // R
-                rgbValues[i + 1] = mapG[rgbValues[i + 1]];  // G
-                rgbValues[i] = mapB[rgbValues[i]];          // B
+                if (maxR > minR)
+                {
+                    int valor = (rgbValues[i + 2] - minR) * 255 / (maxR - minR);
+                    rgbValues[i + 2] = (byte)Math.Clamp(valor, 0, 255);
+                }
+
+                if (maxG > minG)
+                {
+                    int valor = (rgbValues[i + 1] - minG) * 255 / (maxG - minG);
+                    rgbValues[i + 1] = (byte)Math.Clamp(valor, 0, 255);
+                }
+
+                if (maxB > minB)
+                {
+                    int valor = (rgbValues[i] - minB) * 255 / (maxB - minB);
+                    rgbValues[i] = (byte)Math.Clamp(valor, 0, 255);
+                }
             }
 
-            // --- Filtro Gaussiano 3x3 para suavizado ---
+            // --- PASO 2: Ajuste de Gamma ligero ---
+            double gamma = 1.1; // Muy sutil
+            byte[] gammaTable = new byte[256];
+            for (int i = 0; i < 256; i++)
+            {
+                gammaTable[i] = (byte)Math.Clamp(Math.Pow(i / 255.0, 1.0 / gamma) * 255.0, 0, 255);
+            }
+
+            for (int i = 0; i < bytes; i += bpp)
+            {
+                rgbValues[i + 2] = gammaTable[rgbValues[i + 2]];
+                rgbValues[i + 1] = gammaTable[rgbValues[i + 1]];
+                rgbValues[i] = gammaTable[rgbValues[i]];
+            }
+
+            // --- PASO 3: Aumento MUY LIGERO de saturación ---
+            double factorSaturacion = 1.15; // Solo 15% más
+
+            for (int i = 0; i < bytes; i += bpp)
+            {
+                double r = rgbValues[i + 2];
+                double g = rgbValues[i + 1];
+                double b = rgbValues[i];
+
+                // Calcular luminancia
+                double lum = r * 0.299 + g * 0.587 + b * 0.114;
+
+                // Aumentar saturación sutilmente
+                r = lum + (r - lum) * factorSaturacion;
+                g = lum + (g - lum) * factorSaturacion;
+                b = lum + (b - lum) * factorSaturacion;
+
+                rgbValues[i + 2] = (byte)Math.Clamp(r, 0, 255);
+                rgbValues[i + 1] = (byte)Math.Clamp(g, 0, 255);
+                rgbValues[i] = (byte)Math.Clamp(b, 0, 255);
+            }
+
+            // --- PASO 4: Filtro Gaussiano 3x3 ---
             byte[] blur = new byte[bytes];
             int[] kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
             int kernelSum = 16;
@@ -1081,7 +1134,7 @@ namespace Procesamiento2
                 }
             }
 
-            // --- Unsharp Mask (enfoque) ---
+            // --- PASO 5: Unsharp Mask (enfoque) ---
             double factor = sharpenAmount / 100.0;
             for (int i = 0; i < bytes; i += bpp)
             {
@@ -1103,44 +1156,18 @@ namespace Procesamiento2
             ImagenResultado = bmp;
             MostrarResultado();
         }
-        private byte[] CrearMapaEcualizacion(int[] histograma, int totalPixeles)
+
+        // Método auxiliar para encontrar percentil
+        private byte EncontrarPercentil(int[] histograma, int umbral)
         {
-            // Calcular CDF (Función de Distribución Acumulativa)
-            int[] cdf = new int[256];
             int acumulado = 0;
             for (int i = 0; i < 256; i++)
             {
                 acumulado += histograma[i];
-                cdf[i] = acumulado;
+                if (acumulado >= umbral)
+                    return (byte)i;
             }
-
-            // Encontrar el primer valor no cero del CDF
-            int cdfMin = 0;
-            for (int i = 0; i < 256; i++)
-            {
-                if (cdf[i] > 0)
-                {
-                    cdfMin = cdf[i];
-                    break;
-                }
-            }
-
-            // Crear mapa de transformación
-            byte[] mapa = new byte[256];
-            for (int i = 0; i < 256; i++)
-            {
-                if (cdf[i] == 0)
-                {
-                    mapa[i] = 0;
-                }
-                else
-                {
-                    double valor = ((double)(cdf[i] - cdfMin) / (totalPixeles - cdfMin)) * 255.0;
-                    mapa[i] = (byte)Math.Clamp(valor, 0, 255);
-                }
-            }
-
-            return mapa;
+            return 255;
         }
     }
 }
